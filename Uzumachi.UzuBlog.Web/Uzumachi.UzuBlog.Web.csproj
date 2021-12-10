@@ -7,5 +7,9 @@
     <UserSecretsId>aspnet-Uzumachi.UzuBlog.Web-14A308CA-047D-4D25-BA72-6344B40BBB48</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Uzumachi.UzuBlog.Core\Uzumachi.UzuBlog.Core.csproj" />
+  </ItemGroup>
 	
 </Project>

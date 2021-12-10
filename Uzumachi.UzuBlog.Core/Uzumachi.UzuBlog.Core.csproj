@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Uzumachi.UzuBlog.Data\Uzumachi.UzuBlog.Data.csproj" />
+  </ItemGroup>
+
 </Project>
