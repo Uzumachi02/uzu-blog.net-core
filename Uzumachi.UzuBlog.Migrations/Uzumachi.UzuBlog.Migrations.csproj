@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Scripts\*.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <PackageReference Include="dbup-postgresql" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+  </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Uzumachi.UzuBlog.Domain\Uzumachi.UzuBlog.Domain.csproj" />
+	</ItemGroup>
+
+</Project>
