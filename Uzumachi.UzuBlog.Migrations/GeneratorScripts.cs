@@ -16,12 +16,14 @@ public class GeneratorScripts {
 
   private DateTime lastFileDatetime;
 
+  private readonly string solutionDirectory;
+
   private readonly string scriptDirectory;
 
   public GeneratorScripts() {
     var currentAssembly = Assembly.GetExecutingAssembly();
-    var rootDirectory = GetSolutionRoot(currentAssembly);
-    scriptDirectory = Path.Combine(rootDirectory, "Scripts");
+    solutionDirectory = GetSolutionRoot(currentAssembly);
+    scriptDirectory = Path.Combine(solutionDirectory, "Scripts");
 
     lastFileDatetime = DateTime.Now;
   }
@@ -152,5 +154,28 @@ public class GeneratorScripts {
       && first.Hour.Equals(second.Hour)
       && first.Minute.Equals(second.Minute)
       && first.Second.Equals(second.Second);
+
+  private void GenerateIRepository(Type type) {
+    string nameEntity = type.Name.Replace("Entity", "");
+    string className = $"I{nameEntity}Repository";
+    string template = @"using System.Data;
+using Uzumachi.UzuBlog.Domain.Entities;
+
+namespace Uzumachi.UzuBlog.Data.Interfaces;
+
+public interface {0} {{
+
+  Task<{1}> GetByIdAsync(int id);
+
+  /// <returns>Id of new item.</returns>
+  Task<int> CreateAsync({1} {2}, CancellationToken token, IDbTransaction? transaction = null);
+}}
+";
+
+    string code = string.Format(template, className, type.Name, nameEntity.ToLower());
+    var distFile = Path.Combine(Directory.GetParent(solutionDirectory).FullName, "Uzumachi.UzuBlog.Data", "Interfaces", $"{className}.cs");
+
+    File.WriteAllText(distFile, code);
+  }
 }
 
