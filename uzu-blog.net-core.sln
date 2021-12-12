@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uzumachi.UzuBlog.Web", "Uzumachi.UzuBlog.Web\Uzumachi.UzuBlog.Web.csproj", "{61EA7FEF-6CBC-4E87-AEE1-2BE55EA4FC8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uzumachi.UzuBlog.Web", "Uzumachi.UzuBlog.Web\Uzumachi.UzuBlog.Web.csproj", "{61EA7FEF-6CBC-4E87-AEE1-2BE55EA4FC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uzumachi.UzuBlog.Domain", "Uzumachi.UzuBlog.Domain\Uzumachi.UzuBlog.Domain.csproj", "{811B12DC-24CE-455A-A3DF-4E99287C8289}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uzumachi.UzuBlog.Domain", "Uzumachi.UzuBlog.Domain\Uzumachi.UzuBlog.Domain.csproj", "{811B12DC-24CE-455A-A3DF-4E99287C8289}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uzumachi.UzuBlog.Data", "Uzumachi.UzuBlog.Data\Uzumachi.UzuBlog.Data.csproj", "{20B5BCC1-A593-46B2-8CF3-057A5CCCCB5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uzumachi.UzuBlog.Data", "Uzumachi.UzuBlog.Data\Uzumachi.UzuBlog.Data.csproj", "{20B5BCC1-A593-46B2-8CF3-057A5CCCCB5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uzumachi.UzuBlog.Core", "Uzumachi.UzuBlog.Core\Uzumachi.UzuBlog.Core.csproj", "{4FDFE2E5-CAA9-4519-A891-D73376CBAB77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uzumachi.UzuBlog.Core", "Uzumachi.UzuBlog.Core\Uzumachi.UzuBlog.Core.csproj", "{4FDFE2E5-CAA9-4519-A891-D73376CBAB77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uzumachi.UzuBlog.Migrations", "Uzumachi.UzuBlog.Migrations\Uzumachi.UzuBlog.Migrations.csproj", "{89AA01B7-A9D5-4579-81B6-890BCF97384C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4FDFE2E5-CAA9-4519-A891-D73376CBAB77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FDFE2E5-CAA9-4519-A891-D73376CBAB77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FDFE2E5-CAA9-4519-A891-D73376CBAB77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89AA01B7-A9D5-4579-81B6-890BCF97384C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89AA01B7-A9D5-4579-81B6-890BCF97384C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89AA01B7-A9D5-4579-81B6-890BCF97384C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89AA01B7-A9D5-4579-81B6-890BCF97384C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

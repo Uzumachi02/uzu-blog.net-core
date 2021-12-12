@@ -1,5 +1,6 @@
 using Npgsql;
 using System.Data;
+using Uzumachi.UzuBlog.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,14 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if( app.Environment.IsDevelopment() ) {
+  GeneratorScripts generator = new();
+
+  generator.Run();
+
+  using( var scope = app.Services.CreateScope() ) {
+    DatabaseInitializer.Migrations(scope.ServiceProvider);
+  }
+
   app.UseDeveloperExceptionPage();
 } else {
   app.UseExceptionHandler("/Home/Error");
