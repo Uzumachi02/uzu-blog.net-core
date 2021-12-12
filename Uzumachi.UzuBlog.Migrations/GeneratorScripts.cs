@@ -37,6 +37,9 @@ public class GeneratorScripts {
 
     foreach( var type in entityTypes ) {
       try {
+        //GenerateIRepository(type);
+        //GenerateRepository(type);
+
         var tableName = GetTableName(type);
         var scriptName = GetScriptName(tableName);
 
@@ -174,6 +177,41 @@ public interface {0} {{
 
     string code = string.Format(template, className, type.Name, nameEntity.ToLower());
     var distFile = Path.Combine(Directory.GetParent(solutionDirectory).FullName, "Uzumachi.UzuBlog.Data", "Interfaces", $"{className}.cs");
+
+    File.WriteAllText(distFile, code);
+  }
+
+  private void GenerateRepository(Type type) {
+    string nameEntity = type.Name.Replace("Entity", "");
+    string className = $"{nameEntity}Repository";
+    string template = @"using Dapper;
+using System.Data;
+using Uzumachi.UzuBlog.Data.Interfaces;
+using Uzumachi.UzuBlog.Domain.Entities;
+
+namespace Uzumachi.UzuBlog.Data.Repositories;
+
+public class {0} : I{0} {{
+
+  private readonly IDbConnection _dbConnection;
+
+  public {0}(IDbConnection dbConnection) =>
+    _dbConnection = dbConnection;
+
+  public async Task<{1}> GetByIdAsync(int id) {{
+    var sql = $""SELECT * FROM {{{1}.TABLE}} WHERE id = @id;"";
+
+    return await _dbConnection.QueryFirstOrDefaultAsync<{1}>(sql, new {{ id }});
+  }}
+
+  public Task<int> CreateAsync({1} {2}, CancellationToken token, IDbTransaction? transaction = null) {{
+    throw new NotImplementedException();
+  }}
+}}
+";
+
+    string code = string.Format(template, className, type.Name, nameEntity.ToLower());
+    var distFile = Path.Combine(Directory.GetParent(solutionDirectory).FullName, "Uzumachi.UzuBlog.Data", "Repositories", $"{className}.cs");
 
     File.WriteAllText(distFile, code);
   }
