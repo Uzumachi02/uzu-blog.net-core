@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class PageEntity {
+public class PageEntity : IEntity {
 
   public const string TABLE = "public.pages";
 

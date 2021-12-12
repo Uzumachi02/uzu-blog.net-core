@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class ImageEntity {
+public class ImageEntity : IEntity {
 
   public const string TABLE = "public.images";
 

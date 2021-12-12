@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class LanguageResourceEntity {
+public class LanguageResourceEntity : IEntity {
 
   public const string TABLE = "public.language_resources";
 

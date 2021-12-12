@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class MenuEntity {
+public class MenuEntity : IEntity {
 
   public const string TABLE = "public.menus";
 

@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class IpEntity {
+public class IpEntity : IEntity {
 
   public const string TABLE = "public.ips";
 

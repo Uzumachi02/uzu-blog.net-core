@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class PostEntity {
+public class PostEntity : IEntity {
 
   public const string TABLE = "public.posts";
 

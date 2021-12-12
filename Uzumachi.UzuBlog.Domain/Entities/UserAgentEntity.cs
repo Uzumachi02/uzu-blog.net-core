@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class UserAgentEntity {
+public class UserAgentEntity : IEntity {
 
   public const string TABLE = "public.user_agents";
 

@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class SeoEntity {
+public class SeoEntity : IEntity {
 
   public const string TABLE = "public.seo";
 

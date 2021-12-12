@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class LikeEntity {
+public class LikeEntity : IEntity {
 
   public const string TABLE = "public.likes";
 

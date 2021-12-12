@@ -1,6 +1,6 @@
 ﻿namespace Uzumachi.UzuBlog.Domain.Entities;
 
-public class CategoryEntity {
+public class CategoryEntity : IEntity {
 
   public const string TABLE = "public.categories";
 
