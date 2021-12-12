@@ -14,7 +14,7 @@ public class GeneratorScripts {
     { "DateTime", "timestamp" },
   };
 
-  private DateTime? lastFileDatetime;
+  private DateTime lastFileDatetime;
 
   private readonly string scriptDirectory;
 
@@ -22,6 +22,8 @@ public class GeneratorScripts {
     var currentAssembly = Assembly.GetExecutingAssembly();
     var rootDirectory = GetSolutionRoot(currentAssembly);
     scriptDirectory = Path.Combine(rootDirectory, "Scripts");
+
+    lastFileDatetime = DateTime.Now;
   }
 
   public void Run() {
@@ -130,12 +132,11 @@ public class GeneratorScripts {
   private string getFileDate() {
     var nowDate = DateTime.Now;
 
-    if( lastFileDatetime is null ) {
-      lastFileDatetime = nowDate;
-    } else if( lastFileDatetime == nowDate ) {
-      nowDate = nowDate.AddSeconds(1);
-      lastFileDatetime = nowDate;
+     if( nowDate < lastFileDatetime || EqualsDate(nowDate, lastFileDatetime) ) {
+      nowDate = lastFileDatetime.AddSeconds(1);
     }
+
+    lastFileDatetime = nowDate;
 
     return nowDate.ToString("yyyyMMddHHmmss");
   }
@@ -143,5 +144,13 @@ public class GeneratorScripts {
   private string GetSolutionRoot(Assembly assembly) {
     return Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, assembly.GetName().Name);
   }
+
+  private bool EqualsDate(DateTime first, DateTime second)
+    => first.Year.Equals(second.Year)
+      && first.Month.Equals(second.Month)
+      && first.Day.Equals(second.Day)
+      && first.Hour.Equals(second.Hour)
+      && first.Minute.Equals(second.Minute)
+      && first.Second.Equals(second.Second);
 }
 
