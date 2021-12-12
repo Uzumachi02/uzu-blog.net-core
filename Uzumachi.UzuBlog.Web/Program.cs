@@ -1,5 +1,7 @@
 using Npgsql;
 using System.Data;
+using Uzumachi.UzuBlog.Data;
+using Uzumachi.UzuBlog.Data.Interfaces;
 using Uzumachi.UzuBlog.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 // dependency injection
 builder.Services.AddTransient<IDbConnection>(_ => new NpgsqlConnection(connectionString));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
