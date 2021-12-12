@@ -10,6 +10,8 @@ public class CategoryEntity : IEntity {
 
   public int LanguageId { get; set; }
 
+  public int ItemTypeId { get; set; }
+
   public string Alias { get; set; }
 
   public string Title { get; set; }
