@@ -1,9 +1,9 @@
-﻿using Uzumachi.UzuBlog.Domain.Entities;
+﻿using Uzumachi.UzuBlog.Domain.Dtos;
 
 namespace Uzumachi.UzuBlog.Core.Interfaces;
 
 public interface IUserServices {
 
-  public Task<UserEntity> GetByIdAsync(int id);
+  public Task<UserDto> GetByIdAsync(int id);
 }
 

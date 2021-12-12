@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mapster.Core" Version="1.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
@@ -14,4 +15,20 @@
     <ProjectReference Include="..\Uzumachi.UzuBlog.Data\Uzumachi.UzuBlog.Data.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Generated Include="**\*.g.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Mappers\" />
+	</ItemGroup>
+
+	<Target Name="CleanGenerated">
+		<Delete Files="@(Generated)" />
+	</Target>
+
+	<Target Name="Mapster" AfterTargets="AfterBuild">
+		<!--<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tool restore" />-->
+		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)$(ProjectName).dll&quot; -o Mappers -n Uzumachi.UzuBlog.Core.Mappers" />
+	</Target>
 </Project>

@@ -1,6 +1,7 @@
-﻿using Uzumachi.UzuBlog.Core.Interfaces;
+﻿using Uzumachi.UzuBlog.Core.Mappers;
+using Uzumachi.UzuBlog.Core.Interfaces;
 using Uzumachi.UzuBlog.Data.Interfaces;
-using Uzumachi.UzuBlog.Domain.Entities;
+using Uzumachi.UzuBlog.Domain.Dtos;
 
 namespace Uzumachi.UzuBlog.Core.Services;
 
@@ -11,11 +12,11 @@ public class UserServices : IUserServices {
   public UserServices(IUnitOfWork unitOfWork) =>
     _unitOfWork = unitOfWork;
 
-  public async Task<UserEntity> GetByIdAsync(int id) {
+  public async Task<UserDto> GetByIdAsync(int id) {
     var dbUser = await _unitOfWork.Users.GetByIdAsync(id)
         ?? throw new Exception("Comment");
 
-    return dbUser;
+    return dbUser.AdaptToUserDto();
   }
 }
 
