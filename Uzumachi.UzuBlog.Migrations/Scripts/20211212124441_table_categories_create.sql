@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "public"."categories" (
 	"item_type_id" int4 NOT NULL,
 	"alias" varchar NOT NULL,
 	"title" varchar NOT NULL,
+	"display_order" int4 DEFAULT 0,
 	"post_count" int4 DEFAULT 0,
 	"status" int4 DEFAULT 0,
 	"is_deleted" bool DEFAULT false,

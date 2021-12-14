@@ -16,6 +16,8 @@ public class CategoryEntity : IEntity {
 
   public string Title { get; set; }
 
+  public int DisplayOrder { get; set; }
+
   public int PostCount { get; set; }
 
   public int Status { get; set; }

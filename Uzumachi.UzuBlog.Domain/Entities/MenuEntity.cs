@@ -24,6 +24,8 @@ public class MenuEntity : IEntity {
 
   public string Url { get; set; }
 
+  public int DisplayOrder { get; set; }
+
   public DateTime CreateDate { get; set; }
 
   public DateTime UpdateDate { get; set; }

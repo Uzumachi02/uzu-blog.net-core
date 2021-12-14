@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS "public"."menus" (
 	"alias" varchar NOT NULL,
 	"title" varchar NOT NULL,
 	"url" varchar NOT NULL,
+	"display_order" int4 DEFAULT 0,
 	"create_date" timestamp DEFAULT now(),
 	"update_date" timestamp DEFAULT now(),
 	PRIMARY KEY ("id")

@@ -16,6 +16,8 @@ public class LanguageEntity : IEntity {
 
   public string Icon { get; set; }
 
+  public int DisplayOrder { get; set; }
+
   public bool IsDefault { get; set; }
 
   public DateTime CreateDate { get; set; }
