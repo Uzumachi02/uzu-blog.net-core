@@ -18,6 +18,12 @@ public class PageRepository : IPageRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<PageEntity>(sql, new { id });
   }
 
+  public async Task<PageEntity?> GetByAliasAsync(string alias) {
+    var sql = $"SELECT * FROM {PageEntity.TABLE} WHERE alias = @alias;";
+
+    return await _dbConnection.QueryFirstOrDefaultAsync<PageEntity>(sql, new { alias });
+  }
+
   public Task<int> CreateAsync(PageEntity page, CancellationToken token, IDbTransaction? transaction = null) {
     throw new NotImplementedException();
   }

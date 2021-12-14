@@ -11,6 +11,7 @@ public static class DependencyInjection {
     // injection services
     services.AddScoped<IUserServices, UserServices>();
     services.AddScoped<IPostService, PostService>();
+    services.AddScoped<IPageService, PageService>();
 
     return services;
   }

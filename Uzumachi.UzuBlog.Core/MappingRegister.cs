@@ -15,9 +15,14 @@ public class MappingRegister : ICodeGenerationRegister {
         .ForType<PostEntity>()
         .ForType<PostDto>();
 
+    config.AdaptFrom(nameof(PageEntity))
+        .ForType<PageEntity>()
+        .ForType<PageDto>();
+
     config.GenerateMapper("[name]Mapper")
         .ForType<UserDto>()
-        .ForType<PostDto>();
+        .ForType<PostDto>()
+        .ForType<PageDto>();
   }
 }
 
