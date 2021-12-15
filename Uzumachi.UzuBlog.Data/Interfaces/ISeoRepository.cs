@@ -9,4 +9,6 @@ public interface ISeoRepository {
 
   /// <returns>Id of new item.</returns>
   Task<int> CreateAsync(SeoEntity seo, CancellationToken token, IDbTransaction? transaction = null);
+
+  Task<SeoEntity?> GetByUrlAsync(string url);
 }

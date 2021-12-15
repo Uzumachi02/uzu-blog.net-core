@@ -21,4 +21,10 @@ public class SeoRepository : ISeoRepository {
   public Task<int> CreateAsync(SeoEntity seo, CancellationToken token, IDbTransaction? transaction = null) {
     throw new NotImplementedException();
   }
+
+  public async Task<SeoEntity?> GetByUrlAsync(string url) {
+    var sql = $"SELECT * FROM {SeoEntity.TABLE} WHERE url = @url;";
+
+    return await _dbConnection.QueryFirstOrDefaultAsync<SeoEntity>(sql, new { url });
+  }
 }

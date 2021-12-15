@@ -4,12 +4,12 @@ using Uzumachi.UzuBlog.Web.ViewModels;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
 
-public class PageController : Controller {
+public class PageController : BaseController {
 
   private readonly ILogger<PageController> _logger;
   private readonly IPageService _pageService;
 
-  public PageController(ILogger<PageController> logger, IPageService pageService) {
+  public PageController(ILogger<PageController> logger, IPageService pageService, ISeoService seoService) : base(seoService) {
     _logger = logger;
     _pageService = pageService;
   }

@@ -1,9 +1,44 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string? title, metaDescription, metaKeywords, metaOthers = null;
+
+    if( Model is BaseViewModel baseViewModel ) {
+        title = string.IsNullOrWhiteSpace(baseViewModel.Title)
+            ? ViewData["Title"]?.ToString()
+            : baseViewModel.Title;
+
+        metaDescription = string.IsNullOrWhiteSpace(baseViewModel.MetaDescription)
+            ? ViewData["MetaDescription"]?.ToString()
+            : baseViewModel.MetaDescription;
+
+        metaKeywords = string.IsNullOrWhiteSpace(baseViewModel.MetaKeywords)
+            ? ViewData["MetaKeywords"]?.ToString()
+            : baseViewModel.MetaKeywords;
+
+        metaOthers = string.IsNullOrWhiteSpace(baseViewModel.MetaOthers)
+            ? ViewData["MetaOthers"]?.ToString()
+            : baseViewModel.MetaOthers;
+    } else {
+        title = ViewData["Title"]?.ToString();
+        metaDescription = ViewData["MetaDescription"]?.ToString();
+        metaKeywords = ViewData["MetaKeywords"]?.ToString();
+        metaOthers = ViewData["MetaOthers"]?.ToString();
+    }
+}
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - UzuBlog</title>
+    <title>@title - UzuBlog</title>
+    @if( !string.IsNullOrWhiteSpace(metaDescription) ) {
+        <meta name="description" content="@metaDescription" />
+    }
+    @if( !string.IsNullOrWhiteSpace(metaKeywords) ) {
+        <meta name="keywords" content="@metaKeywords" />
+    }
+    @if( !string.IsNullOrWhiteSpace(metaOthers) ) {
+        Html.Raw(metaOthers);
+    }
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Uzumachi.UzuBlog.Web.styles.css" asp-append-version="true" />

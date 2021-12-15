@@ -19,10 +19,15 @@ public class MappingRegister : ICodeGenerationRegister {
         .ForType<PageEntity>()
         .ForType<PageDto>();
 
+    config.AdaptFrom(nameof(SeoEntity))
+        .ForType<SeoEntity>()
+        .ForType<SeoDto>();
+
     config.GenerateMapper("[name]Mapper")
         .ForType<UserDto>()
         .ForType<PostDto>()
-        .ForType<PageDto>();
+        .ForType<PageDto>()
+        .ForType<SeoDto>();
   }
 }
 
