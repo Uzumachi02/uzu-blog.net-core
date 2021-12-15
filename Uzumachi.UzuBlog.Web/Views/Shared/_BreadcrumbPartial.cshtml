@@ -1,0 +1,15 @@
+﻿@model BreadcrumbModel;
+@{
+    if( Model is null || Model.Count < 1 ) {
+        return;
+    }
+}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        @foreach( var item in Model.Items ) {
+            <li class="breadcrumb-item @Html.Raw(item.IsActive.TrueFalse("active\" aria-current=\"page"))">
+                @Html.Raw(item.HasLink.TrueFalse($"<a href=\"{item.Link}\">{item.Title}</a>", item.Title))
+            </li>
+        }
+    </ol>
+</nav>

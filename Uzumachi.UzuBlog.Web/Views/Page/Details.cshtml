@@ -2,4 +2,5 @@
 @{
     ViewData["Title"] = Model.Title;
 }
-<div>@Html.Raw(Model.Page.Content)</div>
+<partial name="_BreadcrumbPartial" model="Model.Breadcrumb" />
+<div>@Html.Raw(Model.Content)</div>
