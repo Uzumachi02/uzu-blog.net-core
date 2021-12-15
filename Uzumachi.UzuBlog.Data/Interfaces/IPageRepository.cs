@@ -11,4 +11,6 @@ public interface IPageRepository {
 
   /// <returns>Id of new item.</returns>
   Task<int> CreateAsync(PageEntity page, CancellationToken token, IDbTransaction? transaction = null);
+
+  Task<int> IncrementViewsCountByIdAsync(int id, CancellationToken token, IDbTransaction? transaction = null);
 }

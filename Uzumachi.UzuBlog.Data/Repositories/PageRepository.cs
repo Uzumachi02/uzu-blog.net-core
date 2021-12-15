@@ -27,4 +27,12 @@ public class PageRepository : IPageRepository {
   public Task<int> CreateAsync(PageEntity page, CancellationToken token, IDbTransaction? transaction = null) {
     throw new NotImplementedException();
   }
+
+  public async Task<int> IncrementViewsCountByIdAsync(int id, CancellationToken token, IDbTransaction? transaction = null) {
+    var sql = $"UPDATE {PageEntity.TABLE} SET view_count = view_count + 1 WHERE id = @id RETURNING view_count;";
+
+    return await _dbConnection.ExecuteScalarAsync<int>(
+      new CommandDefinition(sql, new { id }, transaction, cancellationToken: token)
+    );
+  }
 }

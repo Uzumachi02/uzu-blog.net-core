@@ -18,4 +18,10 @@ public class PageService : IPageService {
 
     return page.AdaptToPageDto();
   }
+
+  public async Task<int> IncrementViewsCountById(int id, CancellationToken token = default) {
+    int newViewsCount = await _unitOfWork.Pages.IncrementViewsCountByIdAsync(id, token);
+
+    return newViewsCount;
+  }
 }

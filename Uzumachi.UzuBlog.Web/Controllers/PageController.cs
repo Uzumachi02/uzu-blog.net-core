@@ -19,18 +19,16 @@ public class PageController : Controller {
     return View();
   }
 
-  public async Task<IActionResult> Details(string alias) {
+  public async Task<IActionResult> Details(string alias, CancellationToken token) {
     var page = await _pageService.GetByAliasAsync(alias);
 
     if( page is null ) {
       return NotFound();
     }
 
-    var vm = new PageViewModel {
-      Title = page.Title,
-      H1 = page.Title,
-      Page = page
-    };
+    await _pageService.IncrementViewsCountById(page.Id, token);
+
+    PageViewModel vm = new(page);
 
     return View(vm);
   }
