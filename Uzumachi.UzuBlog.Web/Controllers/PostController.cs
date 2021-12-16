@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Uzumachi.UzuBlog.Core.Interfaces;
+using Uzumachi.UzuBlog.Domain.Requests;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
 
@@ -14,8 +15,8 @@ public class PostController : Controller {
 
   // GET: PostController
   [HttpGet]
-  public async Task<IActionResult> Index() {
-    var posts = await _postService.GetListAsync();
+  public async Task<IActionResult> List([FromQuery] PostListRequest req) {
+    var posts = await _postService.GetListAsync(req);
 
     return Ok(posts);
   }

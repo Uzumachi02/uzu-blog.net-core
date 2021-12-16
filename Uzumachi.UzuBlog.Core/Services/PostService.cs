@@ -1,6 +1,9 @@
 ﻿using Uzumachi.UzuBlog.Core.Interfaces;
+using Uzumachi.UzuBlog.Core.Mappers;
 using Uzumachi.UzuBlog.Data.Interfaces;
 using Uzumachi.UzuBlog.Domain.Dtos;
+using Uzumachi.UzuBlog.Domain.Requests;
+using Uzumachi.UzuBlog.Domain.Responses;
 
 namespace Uzumachi.UzuBlog.Core.Services;
 
@@ -11,11 +14,25 @@ public class PostService : IPostService {
   public PostService(IUnitOfWork unitOfWork) =>
     _unitOfWork = unitOfWork;
 
-  public Task<IEnumerable<PostDto>> GetListAsync() {
-    List<PostDto> posts = new();
+  public async Task<ItemsResponse<PostDto>> GetListAsync(PostListRequest req) {
+    var filters = req.AdaptToPostFilters();
+    var countPosts = await _unitOfWork.Posts.GetListCountAsync(filters);
 
+    var response = new ItemsResponse<PostDto> {
+      Count = countPosts
+    };
 
-    return Task.FromResult<IEnumerable<PostDto>>(posts);
+    if( countPosts == 0 ) {
+      response.Items = Array.Empty<PostDto>();
+
+      return response;
+    }
+
+    var dbPosts = await _unitOfWork.Posts.GetListAsync(filters);
+    var posts = dbPosts.Select(x => x.AdaptToPostDto()).ToArray();
+
+    response.Items = posts;
+    return response;
   }
 }
 

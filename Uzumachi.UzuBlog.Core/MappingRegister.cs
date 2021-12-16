@@ -1,6 +1,8 @@
 ﻿using Mapster;
+using Uzumachi.UzuBlog.Data.Filters;
 using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Entities;
+using Uzumachi.UzuBlog.Domain.Requests;
 
 namespace Uzumachi.UzuBlog.Core;
 
@@ -15,6 +17,10 @@ public class MappingRegister : ICodeGenerationRegister {
         .ForType<PostEntity>()
         .ForType<PostDto>();
 
+    config.AdaptFrom(nameof(PostListRequest))
+       .ForType<PostListRequest>()
+       .ForType<PostFilters>();
+
     config.AdaptFrom(nameof(PageEntity))
         .ForType<PageEntity>()
         .ForType<PageDto>();
@@ -26,6 +32,7 @@ public class MappingRegister : ICodeGenerationRegister {
     config.GenerateMapper("[name]Mapper")
         .ForType<UserDto>()
         .ForType<PostDto>()
+        .ForType<PostFilters>()
         .ForType<PageDto>()
         .ForType<SeoDto>();
   }
