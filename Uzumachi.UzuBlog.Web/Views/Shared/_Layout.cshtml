@@ -1,27 +1,25 @@
 ﻿@{
-    string? title, metaDescription, metaKeywords, metaOthers = null;
+    string? title, metaOthers = null;
+    Dictionary<string, string> metaProperties;
+    Dictionary<string, string> metadata;
 
     if( Model is BaseViewModel baseViewModel ) {
+        metadata = baseViewModel.Metadata;
+        metaProperties = baseViewModel.MetaProperties;
+
         title = string.IsNullOrWhiteSpace(baseViewModel.Title)
             ? ViewData["Title"]?.ToString()
             : baseViewModel.Title;
 
-        metaDescription = string.IsNullOrWhiteSpace(baseViewModel.MetaDescription)
-            ? ViewData["MetaDescription"]?.ToString()
-            : baseViewModel.MetaDescription;
-
-        metaKeywords = string.IsNullOrWhiteSpace(baseViewModel.MetaKeywords)
-            ? ViewData["MetaKeywords"]?.ToString()
-            : baseViewModel.MetaKeywords;
-
         metaOthers = string.IsNullOrWhiteSpace(baseViewModel.MetaOthers)
             ? ViewData["MetaOthers"]?.ToString()
             : baseViewModel.MetaOthers;
+
+
     } else {
         title = ViewData["Title"]?.ToString();
-        metaDescription = ViewData["MetaDescription"]?.ToString();
-        metaKeywords = ViewData["MetaKeywords"]?.ToString();
-        metaOthers = ViewData["MetaOthers"]?.ToString();
+        metaProperties = new();
+        metadata = new();
     }
 }
 <!DOCTYPE html>
@@ -30,11 +28,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@title - UzuBlog</title>
-    @if( !string.IsNullOrWhiteSpace(metaDescription) ) {
-        <meta name="description" content="@metaDescription" />
+    @foreach( var item in metadata ) {
+        <meta name="@item.Key" content="@item.Value" />
     }
-    @if( !string.IsNullOrWhiteSpace(metaKeywords) ) {
-        <meta name="keywords" content="@metaKeywords" />
+    @foreach( var item in metaProperties ) {
+        <meta property="@item.Key" content="@item.Value" />
     }
     @if( !string.IsNullOrWhiteSpace(metaOthers) ) {
         Html.Raw(metaOthers);

@@ -17,5 +17,9 @@ public class PageViewModel : BaseViewModel {
     H1 = pageDto.Title;
 
     Breadcrumb.Add(pageDto.Title);
+
+    OpenGraphProtocol
+      .SetType("article")
+      .SetTitle(pageDto.Title);
   }
 }
