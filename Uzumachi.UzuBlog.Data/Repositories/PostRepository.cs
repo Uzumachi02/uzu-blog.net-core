@@ -19,6 +19,12 @@ public class PostRepository : IPostRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<PostEntity>(sql, new { id });
   }
 
+  public async Task<PostEntity?> GetByAliasAsync(string alias) {
+    var sql = $"SELECT * FROM {PostEntity.TABLE} WHERE alias = @alias;";
+
+    return await _dbConnection.QueryFirstOrDefaultAsync<PostEntity>(sql, new { alias });
+  }
+
   public async Task<IEnumerable<PostEntity>> GetListAsync(PostFilters filters) {
     var sql = $"SELECT * FROM {PostEntity.TABLE} AS base WHERE base.is_deleted = false";
     var parameters = new DynamicParameters();
@@ -39,7 +45,19 @@ public class PostRepository : IPostRepository {
     return await _dbConnection.ExecuteScalarAsync<int>(sql, parameters);
   }
 
-  public Task<int> CreateAsync(PostEntity post, CancellationToken token, IDbTransaction? transaction = null) {
-    throw new NotImplementedException();
+  public async Task<int> CreateAsync(PostEntity post, CancellationToken token, IDbTransaction? transaction = null) {
+    post.CreateDate = post.UpdateDate = post.PublishDate = DateTime.UtcNow;
+
+    var sql = $"INSERT INTO {PostEntity.TABLE} " +
+        "(user_id, category_id, language_id, image_id, alias, title, excerpt, content, image, close_comments, status, create_date, publish_date, update_date) VALUES " +
+        "(@UserId, @CategoryId, @LanguageId, @ImageId, @Alias, @Title, @Excerpt, @Content, @Image, @CloseComments, @Status, @CreateDate, @PublishDate, @UpdateDate) RETURNING ID;";
+
+    var resId = await _dbConnection.ExecuteScalarAsync<int>(
+      new CommandDefinition(sql, post, transaction, cancellationToken: token)
+    );
+
+    post.Id = resId;
+
+    return resId;
   }
 }

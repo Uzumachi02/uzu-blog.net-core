@@ -8,6 +8,8 @@ public interface IPostRepository {
 
   Task<PostEntity> GetByIdAsync(int id);
 
+  Task<PostEntity?> GetByAliasAsync(string alias);
+
   Task<IEnumerable<PostEntity>> GetListAsync(PostFilters filters);
 
   Task<int> GetListCountAsync(PostFilters filters);

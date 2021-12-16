@@ -18,7 +18,25 @@ public class CategoryRepository : ICategoryRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<CategoryEntity>(sql, new { id });
   }
 
-  public Task<int> CreateAsync(CategoryEntity category, CancellationToken token, IDbTransaction? transaction = null) {
-    throw new NotImplementedException();
+  public async Task<CategoryEntity?> GetByAliasAsync(string alias) {
+    var sql = $"SELECT * FROM {CategoryEntity.TABLE} WHERE alias = @alias;";
+
+    return await _dbConnection.QueryFirstOrDefaultAsync<CategoryEntity>(sql, new { alias });
+  }
+
+  public async Task<int> CreateAsync(CategoryEntity category, CancellationToken token, IDbTransaction? transaction = null) {
+    category.CreateDate = category.UpdateDate = DateTime.UtcNow;
+
+    var sql = $"INSERT INTO {CategoryEntity.TABLE} " +
+        "(parent_id, language_id, item_type_id, alias, title, display_order, status, create_date, update_date) VALUES " +
+        "(@ParentId, @LanguageId, @ItemTypeId, @Alias, @Title, @DisplayOrder, @Status, @CreateDate, @UpdateDate) RETURNING ID;";
+
+    var resId = await _dbConnection.ExecuteScalarAsync<int>(
+      new CommandDefinition(sql, category, transaction, cancellationToken: token)
+    );
+
+    category.Id = resId;
+
+    return resId;
   }
 }
