@@ -19,12 +19,14 @@ public class PostController : Controller {
   public async Task<IActionResult> ListAsync([FromQuery] PostListRequest req) {
     var posts = await _postService.GetListAsync(req);
 
-    return Ok(posts);
+    PostsViewModel vm = new(posts.Items);
+
+    return View(vm);
   }
 
   // GET: PostController/Details/5
   [HttpGet("{alias}")]
-  public async Task<IActionResult> Details(string alias, CancellationToken cancellationToken) {
+  public async Task<IActionResult> DetailsAsync(string alias, CancellationToken cancellationToken) {
     var post = await _postService.GetByAliasAsync(alias);
 
     if( post is null ) {
