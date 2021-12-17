@@ -18,7 +18,25 @@ public class TagRepository : ITagRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<TagEntity>(sql, new { id });
   }
 
-  public Task<int> CreateAsync(TagEntity tag, CancellationToken token, IDbTransaction? transaction = null) {
-    throw new NotImplementedException();
+  public async Task<IEnumerable<TagEntity>> GetListByNames(IEnumerable<string> tagNames) {
+    var sql = $"SELECT * FROM {TagEntity.TABLE} WHERE LOWER(title) = ANY(@tagNames);";
+
+    return await _dbConnection.QueryAsync<TagEntity>(sql, new { tagNames = tagNames.Select(x => x.Trim().ToLower()).ToArray() });
+  }
+
+  public async Task<int> CreateAsync(TagEntity tag, CancellationToken token, IDbTransaction? transaction = null) {
+    tag.CreateDate = tag.UpdateDate = DateTime.UtcNow;
+
+    var sql = $"INSERT INTO {TagEntity.TABLE} " +
+        "(language_id, alias, title, create_date, update_date) VALUES " +
+        "(@LanguageId, @Alias, @Title, @CreateDate, @UpdateDate) RETURNING ID;";
+
+    var resId = await _dbConnection.ExecuteScalarAsync<int>(
+      new CommandDefinition(sql, tag, transaction, cancellationToken: token)
+    );
+
+    tag.Id = resId;
+
+    return resId;
   }
 }

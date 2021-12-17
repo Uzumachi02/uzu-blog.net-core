@@ -9,4 +9,7 @@ public interface IPostTagRepository {
 
   /// <returns>Id of new item.</returns>
   Task<int> CreateAsync(PostTagEntity posttag, CancellationToken token, IDbTransaction? transaction = null);
+
+  /// <returns>count new item.</returns>
+  Task<int> AddTagsToPost(IEnumerable<int> tagIds, int postId, CancellationToken cancellationToken, IDbTransaction? transaction = null);
 }

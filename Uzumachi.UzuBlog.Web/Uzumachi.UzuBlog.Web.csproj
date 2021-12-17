@@ -11,6 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Uzumachi.UzuBlog.Core\Uzumachi.UzuBlog.Core.csproj" />
     <ProjectReference Include="..\Uzumachi.UzuBlog.Migrations\Uzumachi.UzuBlog.Migrations.csproj" />
+    <ProjectReference Include="..\Uzumachi.UzuBlog.Parsers\Uzumachi.UzuBlog.Parsers.csproj" />
   </ItemGroup>
-	
 </Project>

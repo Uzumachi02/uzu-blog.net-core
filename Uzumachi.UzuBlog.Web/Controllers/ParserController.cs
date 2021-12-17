@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Uzumachi.UzuBlog.Core.Helpers;
 using Uzumachi.UzuBlog.Data.Interfaces;
+using Uzumachi.UzuBlog.Domain.Entities;
 using Uzumachi.UzuBlog.Domain.Types;
-using Uzumachi.UzuBlog.Web.Parsers;
+using Uzumachi.UzuBlog.Parsers;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
 
@@ -70,10 +72,34 @@ public class ParserController : ControllerBase {
         };
 
         await _unitOfWork.Posts.CreateAsync(dbPost, cancellationToken, transaction);
+
+        if( item.tags != null && item.tags.Count > 0 ) {
+          var tagNames = item.tags.Select(t => t.Trim().ToLower()).ToList();
+          var dbTags = (await _unitOfWork.Tags.GetListByNames(tagNames)).ToList();
+
+          foreach( var tagName in tagNames ) {
+            var findTag = dbTags.Find(t => t.Title.Equals(tagName, StringComparison.OrdinalIgnoreCase));
+
+            if( findTag is null ) {
+              var newTag = new TagEntity {
+                Alias = TextHelpers.TranslitForAlias(tagName),
+                Title = tagName,
+                LanguageId = languageId
+              };
+
+              await _unitOfWork.Tags.CreateAsync(newTag, cancellationToken, transaction);
+
+              dbTags.Add(newTag);
+            }
+          }
+
+          await _unitOfWork.PostTags.AddTagsToPost(dbTags.Select(x => x.Id), dbPost.Id, cancellationToken, transaction);
+        }
+
         response.IncrementAdded();
 
         transaction.Commit();
-      } catch( Exception ex) {
+      } catch( Exception ex ) {
         transaction.Rollback();
 
         _logger.LogError(ex, "");
