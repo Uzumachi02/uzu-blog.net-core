@@ -5,14 +5,14 @@ public class BreadcrumbItemModel {
   /// <summary>
   /// Название ссылки.
   /// </summary>
-  public string Title;
+  public string Title { get; set; }
 
   /// <summary>
   /// Ссылка.
   /// </summary>
-  public string? Link;
+  public string? Link { get; set; }
 
-  public bool IsActive;
+  public bool IsActive { get; set; }
 
   public bool HasLink => !string.IsNullOrWhiteSpace(Link);
 

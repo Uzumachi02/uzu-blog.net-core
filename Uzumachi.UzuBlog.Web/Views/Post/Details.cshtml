@@ -1,0 +1,8 @@
+﻿@model PostViewModel;
+@{
+    //ViewData["Title"] = Model.Title;
+}
+<partial name="_BreadcrumbPartial" model="Model.Breadcrumb" />
+<h1>@Model.H1</h1>
+<p><strong>@Model.Excerpt</strong></p>
+<div>@Html.Raw(Model.Content)</div>

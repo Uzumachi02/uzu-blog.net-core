@@ -60,4 +60,12 @@ public class PostRepository : IPostRepository {
 
     return resId;
   }
+
+  public async Task<int> IncrementViewsCountByIdAsync(int id, CancellationToken cancellationToken, IDbTransaction? transaction = null) {
+    var sql = $"UPDATE {PostEntity.TABLE} SET view_count = view_count + 1 WHERE id = @id RETURNING view_count;";
+
+    return await _dbConnection.ExecuteScalarAsync<int>(
+      new CommandDefinition(sql, new { id }, transaction, cancellationToken: cancellationToken)
+    );
+  }
 }

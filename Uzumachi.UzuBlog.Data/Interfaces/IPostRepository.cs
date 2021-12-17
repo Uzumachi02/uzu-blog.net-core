@@ -16,4 +16,6 @@ public interface IPostRepository {
 
   /// <returns>Id of new item.</returns>
   Task<int> CreateAsync(PostEntity post, CancellationToken token, IDbTransaction? transaction = null);
+
+  Task<int> IncrementViewsCountByIdAsync(int id, CancellationToken cancellationToken, IDbTransaction? transaction = null);
 }

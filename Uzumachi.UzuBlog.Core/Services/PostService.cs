@@ -14,6 +14,12 @@ public class PostService : IPostService {
   public PostService(IUnitOfWork unitOfWork) =>
     _unitOfWork = unitOfWork;
 
+  public async Task<PostDto?> GetByAliasAsync(string alias) {
+    var dbPost = await _unitOfWork.Posts.GetByAliasAsync(alias);
+
+    return dbPost.AdaptToPostDto();
+  }
+
   public async Task<ItemsResponse<PostDto>> GetListAsync(PostListRequest req) {
     var filters = req.AdaptToPostFilters();
     var countPosts = await _unitOfWork.Posts.GetListCountAsync(filters);
@@ -33,6 +39,12 @@ public class PostService : IPostService {
 
     response.Items = posts;
     return response;
+  }
+
+  public async Task<int> IncrementViewsCountById(int postId, CancellationToken cancellationToken = default) {
+    int newViewsCount = await _unitOfWork.Posts.IncrementViewsCountByIdAsync(postId, cancellationToken);
+
+    return newViewsCount;
   }
 }
 

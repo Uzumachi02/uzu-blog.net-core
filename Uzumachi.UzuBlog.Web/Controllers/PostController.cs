@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Uzumachi.UzuBlog.Core.Interfaces;
 using Uzumachi.UzuBlog.Domain.Requests;
+using Uzumachi.UzuBlog.Web.ViewModels;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
 
@@ -15,15 +16,26 @@ public class PostController : Controller {
 
   // GET: PostController
   [HttpGet]
-  public async Task<IActionResult> List([FromQuery] PostListRequest req) {
+  public async Task<IActionResult> ListAsync([FromQuery] PostListRequest req) {
     var posts = await _postService.GetListAsync(req);
 
     return Ok(posts);
   }
 
   // GET: PostController/Details/5
-  public ActionResult Details(int id) {
-    return View();
+  [HttpGet("{alias}")]
+  public async Task<IActionResult> Details(string alias, CancellationToken cancellationToken) {
+    var post = await _postService.GetByAliasAsync(alias);
+
+    if( post is null ) {
+      return NotFound();
+    }
+
+    post.ViewCount = await _postService.IncrementViewsCountById(post.Id, cancellationToken);
+
+    PostViewModel vm = new(post);
+
+    return View(vm);
   }
 
   // GET: PostController/Create
