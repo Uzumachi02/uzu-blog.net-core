@@ -9,30 +9,83 @@ namespace Uzumachi.UzuBlog.Web.Controllers;
 public class PostController : Controller {
 
   private readonly IPostService _postService;
+  private readonly ICategoryService _categoryService;
 
-  public PostController(IPostService postService) {
+  public PostController(IPostService postService, ICategoryService categoryService) {
     _postService = postService;
+    _categoryService = categoryService;
   }
 
   // GET: PostController
   [HttpGet]
   public async Task<IActionResult> ListAsync([FromQuery] PostListRequest req) {
+    req.IncludeCategories = req.IncludeUsers = req.IncludeTags = 1;
+
     var posts = await _postService.GetListAsync(req);
+    
+    if( posts.Users != null && posts.Users.Count() > 0 ) {
+      var groupUsers = posts.Users.ToDictionary(x => x.Id, x => x);
+
+      foreach( var item in posts.Items ) {
+        if( groupUsers.ContainsKey(item.UserId) ) {
+          item.User = groupUsers[item.UserId];
+        }
+      }
+    }
+
+    if( posts.Categories != null && posts.Categories.Count() > 0 ) {
+      var groupCaregorues = posts.Categories.ToDictionary(x => x.Id, x => x);
+
+      foreach( var item in posts.Items ) {
+        if( groupCaregorues.ContainsKey(item.CategoryId) ) {
+          item.Category = groupCaregorues[item.CategoryId];
+        }
+      }
+    }
 
     PostsViewModel vm = new(posts.Items);
 
     return View(vm);
   }
 
-  // GET: PostController/Details/5
   [HttpGet("{alias}")]
-  public async Task<IActionResult> DetailsAsync(string alias, CancellationToken cancellationToken) {
+  public async Task<IActionResult> CategoryAsync(string alias, [FromQuery] PostListRequest req) {
+    var category = await _categoryService.GetByAliasAsync(alias);
+
+    if( category is null ) {
+      return NotFound();
+    }
+
+    req.CategoryId = category.Id;
+    req.IncludeUsers = req.IncludeTags = 1;
+
+    var posts = await _postService.GetListAsync(req);
+
+    foreach( var item in posts.Items ) {
+      item.Category = category;
+    }
+
+    PostsViewModel vm = new(category, posts.Items);
+
+    return View(vm);
+  }
+
+  // GET: PostController/Details/5
+  [HttpGet("{catAlias}/{alias}")]
+  public async Task<IActionResult> DetailsAsync(string catAlias, string alias, CancellationToken cancellationToken) {
+    var category = await _categoryService.GetByAliasAsync(catAlias);
+
+    if( category is null ) {
+      return NotFound();
+    }
+
     var post = await _postService.GetByAliasAsync(alias);
 
     if( post is null ) {
       return NotFound();
     }
 
+    post.Category = category;
     post.ViewCount = await _postService.IncrementViewsCountById(post.Id, cancellationToken);
 
     PostViewModel vm = new(post);

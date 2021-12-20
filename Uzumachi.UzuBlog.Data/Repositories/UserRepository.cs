@@ -18,6 +18,12 @@ public class UserRepository : IUserRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<UserEntity>(sql, new { id });
   }
 
+  public async Task<IEnumerable<UserEntity>> GetListByIdsAsync(IEnumerable<int> ids) {
+    var sql = $"SELECT * FROM {UserEntity.TABLE} WHERE id = ANY(@ids);";
+
+    return await _dbConnection.QueryAsync<UserEntity>(sql, new { ids = ids.ToArray() });
+  }
+
   public Task<int> CreateAsync(UserEntity user, CancellationToken token, IDbTransaction? transaction = null) {
     throw new NotImplementedException();
   }

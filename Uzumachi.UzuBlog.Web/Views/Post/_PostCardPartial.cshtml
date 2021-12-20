@@ -1,0 +1,17 @@
+﻿@model PostDto
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="/posts/@Model.Category.Alias/@Model.Alias">@Model.Title</a>
+        </h5>
+        <p class="text-truncate-2">@Model.Excerpt</p>
+
+        <p class="fs-sm">
+            <a class="btn-tag me-2 mb-2" href="/posts/@Model.Category.Alias">@Model.Category.Title</a>
+        </p>
+    </div>
+
+    <div class="card-footer">
+        <h6 class="mb-0"><a href="/user/@Model.User.Username">@Model.User.Username</a></h6>
+    </div>
+</div>

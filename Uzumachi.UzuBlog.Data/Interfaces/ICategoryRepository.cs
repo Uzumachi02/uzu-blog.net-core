@@ -9,6 +9,8 @@ public interface ICategoryRepository {
 
   Task<CategoryEntity?> GetByAliasAsync(string alias);
 
+  Task<IEnumerable<CategoryEntity>> GetListByIdsAsync(IEnumerable<int> ids);
+
   /// <returns>Id of new item.</returns>
   Task<int> CreateAsync(CategoryEntity category, CancellationToken token, IDbTransaction? transaction = null);
 }

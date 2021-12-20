@@ -20,11 +20,11 @@ public class PostService : IPostService {
     return dbPost.AdaptToPostDto();
   }
 
-  public async Task<ItemsResponse<PostDto>> GetListAsync(PostListRequest req) {
+  public async Task<PostsReponse> GetListAsync(PostListRequest req) {
     var filters = req.AdaptToPostFilters();
     var countPosts = await _unitOfWork.Posts.GetListCountAsync(filters);
 
-    var response = new ItemsResponse<PostDto> {
+    var response = new PostsReponse {
       Count = countPosts
     };
 
@@ -36,6 +36,20 @@ public class PostService : IPostService {
 
     var dbPosts = await _unitOfWork.Posts.GetListAsync(filters);
     var posts = dbPosts.Select(x => x.AdaptToPostDto()).ToArray();
+
+    if( req.IncludeUsers > 0 ) {
+      var usersId = posts.Select(p => p.UserId).Distinct();
+      var dbUsers = await _unitOfWork.Users.GetListByIdsAsync(usersId);
+
+      response.Users = dbUsers.Select(u => u.AdaptToUserDto());
+    }
+
+    if( req.IncludeCategories > 0 ) {
+      var categoriesId = posts.Select(p => p.CategoryId).Distinct();
+      var dbCategories = await _unitOfWork.Categories.GetListByIdsAsync(categoriesId);
+
+      response.Categories = dbCategories.Select(c => c.AdaptToCategoryDto());
+    }
 
     response.Items = posts;
     return response;

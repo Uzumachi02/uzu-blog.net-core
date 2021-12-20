@@ -13,6 +13,7 @@ public static class DependencyInjection {
     services.AddScoped<IPostService, PostService>();
     services.AddScoped<IPageService, PageService>();
     services.AddScoped<ISeoService, SeoService>();
+    services.AddScoped<ICategoryService, CategoryService>();
 
     return services;
   }

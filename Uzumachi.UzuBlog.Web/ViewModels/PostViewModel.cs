@@ -17,9 +17,13 @@ public class PostViewModel : BaseViewModel {
     Title = postDto.Title;
     H1 = postDto.Title;
 
-    Breadcrumb
-      .Add("Posts", "/posts")
-      .Add(postDto.Title);
+    Breadcrumb.Add("Posts", "/posts");
+
+    if( postDto.Category != null ) {
+      Breadcrumb.Add(postDto.Category.Title, "/posts/" + postDto.Category.Alias);
+    }
+
+    Breadcrumb.Add(Title);
 
     OpenGraphProtocol
       .SetType("article")

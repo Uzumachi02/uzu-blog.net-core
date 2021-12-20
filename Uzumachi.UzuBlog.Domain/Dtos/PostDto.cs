@@ -41,4 +41,9 @@ public class PostDto {
   public DateTime PublishDate { get; set; }
 
   public DateTime UpdateDate { get; set; }
+
+
+  public UserDto? User;
+
+  public CategoryDto? Category;
 }

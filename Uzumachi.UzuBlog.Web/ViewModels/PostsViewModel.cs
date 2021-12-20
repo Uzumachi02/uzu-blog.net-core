@@ -12,4 +12,12 @@ public class PostsViewModel : BaseViewModel {
 
     Breadcrumb.Add("Posts");
   }
+
+  public PostsViewModel(CategoryDto category, IEnumerable<PostDto> posts) {
+    Title = $"{category.Title} - List of posts";
+    Posts = posts.ToList();
+
+    Breadcrumb.Add("Posts", "/posts");
+    Breadcrumb.Add(category.Title);
+  }
 }

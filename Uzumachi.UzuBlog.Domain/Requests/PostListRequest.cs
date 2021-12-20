@@ -13,4 +13,12 @@ public class PostListRequest {
   public int Offset { get; set; }
 
   public string? Sorting { get; set; }
+
+  public int IncludeUsers { get; set; }
+
+  public int IncludeCategories { get; set; }
+
+  public int IncludeTags { get; set; }
+
+  public int IncludeComments { get; set; }
 }

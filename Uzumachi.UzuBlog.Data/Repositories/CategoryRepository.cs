@@ -24,6 +24,12 @@ public class CategoryRepository : ICategoryRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<CategoryEntity>(sql, new { alias });
   }
 
+  public async Task<IEnumerable<CategoryEntity>> GetListByIdsAsync(IEnumerable<int> ids) {
+    var sql = $"SELECT * FROM {CategoryEntity.TABLE} WHERE id = ANY(@ids);";
+
+    return await _dbConnection.QueryAsync<CategoryEntity>(sql, new { ids = ids.ToArray() });
+  }
+
   public async Task<int> CreateAsync(CategoryEntity category, CancellationToken token, IDbTransaction? transaction = null) {
     category.CreateDate = category.UpdateDate = DateTime.UtcNow;
 

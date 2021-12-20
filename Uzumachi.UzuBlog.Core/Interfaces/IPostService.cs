@@ -8,7 +8,7 @@ public interface IPostService {
 
   Task<PostDto?> GetByAliasAsync(string alias);
 
-  Task<ItemsResponse<PostDto>> GetListAsync(PostListRequest req);
+  Task<PostsReponse> GetListAsync(PostListRequest req);
 
   Task<int> IncrementViewsCountById(int postId, CancellationToken cancellationToken = default);
 }

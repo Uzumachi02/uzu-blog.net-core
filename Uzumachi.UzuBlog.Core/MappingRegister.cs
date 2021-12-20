@@ -29,12 +29,16 @@ public class MappingRegister : ICodeGenerationRegister {
         .ForType<SeoEntity>()
         .ForType<SeoDto>();
 
+    config.AdaptFrom(nameof(CategoryEntity))
+        .ForType<CategoryEntity>()
+        .ForType<CategoryDto>();
+
     config.GenerateMapper("[name]Mapper")
         .ForType<UserDto>()
         .ForType<PostDto>()
         .ForType<PostFilters>()
         .ForType<PageDto>()
-        .ForType<SeoDto>();
+        .ForType<SeoDto>()
+        .ForType<CategoryDto>();
   }
 }
-
