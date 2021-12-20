@@ -22,6 +22,8 @@ public class PostDto {
 
   public string Image { get; set; }
 
+  public int[]? TagIds { get; set; }
+
   public int TagCount { get; set; }
 
   public int ViewCount { get; set; }
@@ -46,4 +48,6 @@ public class PostDto {
   public UserDto? User;
 
   public CategoryDto? Category;
+
+  public IEnumerable<TagDto>? Tags;
 }

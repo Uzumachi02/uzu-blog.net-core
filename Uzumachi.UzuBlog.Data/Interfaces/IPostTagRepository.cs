@@ -7,6 +7,8 @@ public interface IPostTagRepository {
 
   Task<PostTagEntity> GetByIdAsync(int id);
 
+  Task<IEnumerable<PostTagEntity>> GetAllByPostIdsAsync(IEnumerable<int> postIds);
+
   /// <returns>Id of new item.</returns>
   Task<int> CreateAsync(PostTagEntity posttag, CancellationToken token, IDbTransaction? transaction = null);
 

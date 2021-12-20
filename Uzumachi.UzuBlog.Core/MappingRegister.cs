@@ -33,12 +33,17 @@ public class MappingRegister : ICodeGenerationRegister {
         .ForType<CategoryEntity>()
         .ForType<CategoryDto>();
 
+    config.AdaptFrom(nameof(TagEntity))
+        .ForType<TagEntity>()
+        .ForType<TagDto>();
+
     config.GenerateMapper("[name]Mapper")
         .ForType<UserDto>()
         .ForType<PostDto>()
         .ForType<PostFilters>()
         .ForType<PageDto>()
         .ForType<SeoDto>()
-        .ForType<CategoryDto>();
+        .ForType<CategoryDto>()
+        .ForType<TagDto>();
   }
 }

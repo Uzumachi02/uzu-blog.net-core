@@ -3,13 +3,7 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     @foreach( var item in Model.Posts ) {
         <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">@item.Title</h5>
-                    <p class="card-text">@item.Excerpt</p>
-                    <a href="/posts/@item.Category.Alias/@item.Alias" class="card-link">View post</a>
-                </div>
-            </div>
+            <partial name="_PostCardPartial" model="item" />
         </div>
     }
 </div>

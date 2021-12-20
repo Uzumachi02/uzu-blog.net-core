@@ -18,6 +18,12 @@ public class PostTagRepository : IPostTagRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<PostTagEntity>(sql, new { id });
   }
 
+  public async Task<IEnumerable<PostTagEntity>> GetAllByPostIdsAsync(IEnumerable<int> postIds) {
+    var sql = $"SELECT * FROM {PostTagEntity.TABLE} WHERE post_id = ANY(@ids);";
+
+    return await _dbConnection.QueryAsync<PostTagEntity>(sql, new { ids = postIds.ToArray() });
+  }
+
   public Task<int> CreateAsync(PostTagEntity posttag, CancellationToken token, IDbTransaction? transaction = null) {
     throw new NotImplementedException();
   }

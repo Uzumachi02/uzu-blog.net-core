@@ -9,6 +9,14 @@
         <p class="fs-sm">
             <a class="btn-tag me-2 mb-2" href="/posts/@Model.Category.Alias">@Model.Category.Title</a>
         </p>
+
+        @if( Model.Tags != null ) {
+            <p>
+                @foreach( var tag in Model.Tags ) {
+                    <a class="btn-tag me-2 mb-2" href="/tags/@tag.Alias">@tag.Title</a>
+                }
+            </p>
+        }
     </div>
 
     <div class="card-footer">

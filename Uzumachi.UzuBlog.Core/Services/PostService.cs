@@ -51,6 +51,22 @@ public class PostService : IPostService {
       response.Categories = dbCategories.Select(c => c.AdaptToCategoryDto());
     }
 
+    if( req.IncludeTags > 0 ) {
+      HashSet<int> tagsId = new();
+
+      foreach( var post in posts ) {
+        if( post.TagIds != null ) {
+          tagsId.UnionWith(post.TagIds);
+        }
+      }
+
+      if( tagsId.Count > 0 ) {
+        var dbTags = await _unitOfWork.Tags.GetListByIdsAsync(tagsId);
+
+        response.Tags = dbTags.Select(t => t.AdaptToTagDto());
+      }
+    }
+
     response.Items = posts;
     return response;
   }

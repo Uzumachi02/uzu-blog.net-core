@@ -7,4 +7,6 @@ public class PostsReponse : ItemsResponse<PostDto> {
   public IEnumerable<UserDto>? Users { get; set; }
 
   public IEnumerable<CategoryDto>? Categories { get; set; }
+
+  public IEnumerable<TagDto>? Tags { get; set; }
 }

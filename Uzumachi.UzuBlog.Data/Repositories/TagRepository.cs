@@ -18,6 +18,12 @@ public class TagRepository : ITagRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<TagEntity>(sql, new { id });
   }
 
+  public async Task<IEnumerable<TagEntity>> GetListByIdsAsync(IEnumerable<int> ids) {
+    var sql = $"SELECT * FROM {TagEntity.TABLE} WHERE id = ANY(@ids);";
+
+    return await _dbConnection.QueryAsync<TagEntity>(sql, new { ids = ids.ToArray() });
+  }
+
   public async Task<IEnumerable<TagEntity>> GetListByNames(IEnumerable<string> tagNames) {
     var sql = $"SELECT * FROM {TagEntity.TABLE} WHERE LOWER(title) = ANY(@tagNames);";
 

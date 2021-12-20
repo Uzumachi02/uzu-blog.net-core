@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Uzumachi.UzuBlog.Core.Interfaces;
+using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Requests;
 using Uzumachi.UzuBlog.Web.ViewModels;
 
@@ -21,29 +22,11 @@ public class PostController : Controller {
   public async Task<IActionResult> ListAsync([FromQuery] PostListRequest req) {
     req.IncludeCategories = req.IncludeUsers = req.IncludeTags = 1;
 
-    var posts = await _postService.GetListAsync(req);
-    
-    if( posts.Users != null && posts.Users.Count() > 0 ) {
-      var groupUsers = posts.Users.ToDictionary(x => x.Id, x => x);
+    var postsReponse = await _postService.GetListAsync(req);
+    var vm = PostsViewModel.CreateByPostsReponse(postsReponse);
 
-      foreach( var item in posts.Items ) {
-        if( groupUsers.ContainsKey(item.UserId) ) {
-          item.User = groupUsers[item.UserId];
-        }
-      }
-    }
-
-    if( posts.Categories != null && posts.Categories.Count() > 0 ) {
-      var groupCaregorues = posts.Categories.ToDictionary(x => x.Id, x => x);
-
-      foreach( var item in posts.Items ) {
-        if( groupCaregorues.ContainsKey(item.CategoryId) ) {
-          item.Category = groupCaregorues[item.CategoryId];
-        }
-      }
-    }
-
-    PostsViewModel vm = new(posts.Items);
+    vm.Title = "List of posts";
+    vm.Breadcrumb.Add("Posts");
 
     return View(vm);
   }
@@ -59,13 +42,20 @@ public class PostController : Controller {
     req.CategoryId = category.Id;
     req.IncludeUsers = req.IncludeTags = 1;
 
-    var posts = await _postService.GetListAsync(req);
+    var postsReponse = await _postService.GetListAsync(req);
 
-    foreach( var item in posts.Items ) {
-      item.Category = category;
+    if( postsReponse.Items != null && postsReponse.Items.Any() ) {
+      foreach( var item in postsReponse.Items ) {
+        item.Category = category;
+      }
     }
 
-    PostsViewModel vm = new(category, posts.Items);
+    var vm = PostsViewModel.CreateByPostsReponse(postsReponse);
+
+    vm.Title = $"{category.Title} - List of posts";
+    vm.Breadcrumb
+      .Add("Posts", "/posts")
+      .Add(category.Title);
 
     return View(vm);
   }

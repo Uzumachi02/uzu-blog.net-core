@@ -7,6 +7,8 @@ public interface ITagRepository {
 
   Task<TagEntity> GetByIdAsync(int id);
 
+  Task<IEnumerable<TagEntity>> GetListByIdsAsync(IEnumerable<int> ids);
+
   Task<IEnumerable<TagEntity>> GetListByNames(IEnumerable<string> tagNames);
 
   /// <returns>Id of new item.</returns>

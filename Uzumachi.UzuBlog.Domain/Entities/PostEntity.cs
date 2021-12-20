@@ -24,6 +24,8 @@ public class PostEntity : IEntity {
 
   public string Image { get; set; }
 
+  public int[]? TagIds { get; set; }
+
   public int TagCount { get; set; }
 
   public int ViewCount { get; set; }
