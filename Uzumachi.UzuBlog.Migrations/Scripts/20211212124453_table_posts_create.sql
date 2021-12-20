@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS "public"."posts" (
 	"excerpt" varchar NOT NULL,
 	"content" varchar NOT NULL,
 	"image" varchar,
+	"tag_ids" int4[],
 	"tag_count" int4 DEFAULT 0,
 	"view_count" int4 DEFAULT 0,
 	"like_count" int4 DEFAULT 0,
