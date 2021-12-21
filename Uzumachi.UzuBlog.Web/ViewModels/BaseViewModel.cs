@@ -19,6 +19,8 @@ public class BaseViewModel {
 
   public string? MetaOthers { get; set; }
 
+  public PaginationModel? Pagination { get; set; }
+
   public Dictionary<string, string> Metadata => _metadata ??= new();
 
   public Dictionary<string, string> MetaProperties => _metaProperties ??= new();

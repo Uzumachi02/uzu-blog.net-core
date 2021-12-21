@@ -2,6 +2,7 @@
 using Uzumachi.UzuBlog.Core.Interfaces;
 using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Requests;
+using Uzumachi.UzuBlog.Web.Models;
 using Uzumachi.UzuBlog.Web.ViewModels;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
@@ -27,6 +28,8 @@ public class PostController : Controller {
 
     vm.Title = "List of posts";
     vm.Breadcrumb.Add("Posts");
+
+    vm.Pagination = new(req.Page, req.Limit, postsReponse.Count);
 
     return View(vm);
   }

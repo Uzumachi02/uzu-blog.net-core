@@ -1,0 +1,15 @@
+﻿@model PaginationModel
+@{
+    if( Model is null || !Model.HasButtons ) {
+        return;
+    }
+}
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @foreach( var button in Model.Buttons ) {
+            <li class="page-item @button.IsDisabled.TrueFalse("disabled")@Html.Raw(button.IsActive.TrueFalse("active\" aria-current=\"page"))">
+                <a class="page-link" href="?page=@button.Value">@button.Title</a>
+            </li>
+        }
+    </ul>
+</nav>
