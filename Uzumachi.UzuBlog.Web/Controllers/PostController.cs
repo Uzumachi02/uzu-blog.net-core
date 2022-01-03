@@ -60,6 +60,8 @@ public class PostController : Controller {
       .Add("Posts", "/posts")
       .Add(category.Title);
 
+    vm.Pagination = new(req.Page, req.Limit, postsReponse.Count);
+
     return View(vm);
   }
 

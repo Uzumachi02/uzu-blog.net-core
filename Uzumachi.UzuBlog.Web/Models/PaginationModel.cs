@@ -2,99 +2,105 @@
 
 public class PaginationModel {
 
-  private const string LabelPrevious = "«";
-  private const string LabelNext = "»";
-  private const string LabelLast = "»»";
-  private const string LabelFirst = "««";
+  private const string LabelPrevious = "Previous page";
+  private const string LabelNext = "Next page";
+  private const string LabelDelimiter= "...";
 
-  public int GroupIndex { get; set; }
+  private List<PaginationButtonModel>? _buttons;
 
-  public int MinPage { get; set; }
+  public int ButtonsCount { get; set; }
 
-  public int MaxPage { get; set; }
-
-  public int NextPage { get; set; }
-
-  public int PreviousPage { get; set; }
+  public int CurrentPage { get; set; }
 
   public int TotalPages { get; set; }
 
-  public int PageIndex { get; set; }
-
-  public List<PaginationButtonModel> Buttons { get; set; }
+  public List<PaginationButtonModel> Buttons => _buttons ??= GetButtons();
 
   public bool HasButtons => Buttons.Any();
 
-  public PaginationModel(int pageIndex, int pageSize, int totalCount, int pagesInGroup = 10) {
-
+  public PaginationModel(int currentPage, int pageSize, int totalCount) {
     if( pageSize < 1 )
       pageSize = 20;
 
-    PageIndex = pageIndex;
+    ButtonsCount = 5;
+    CurrentPage = currentPage > 0 ? currentPage : 1;
     TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-    GroupIndex = (int)Math.Floor(Convert.ToDecimal(PageIndex) / Convert.ToDecimal(pagesInGroup));
-    MinPage = GroupIndex * pagesInGroup + 1;
-    MaxPage = MinPage + pagesInGroup - 1;
-    PreviousPage = MinPage - 1;
-    NextPage = MaxPage + 1;
-
-    if( MinPage <= 1 ) {
-      PreviousPage = 1;
-    }
-
-    if( MaxPage > TotalPages ) {
-      MaxPage = TotalPages;
-    }
-
-    if( NextPage > TotalPages ) {
-      NextPage = 0;
-    }
-
-    Buttons = GetButtons();
   }
 
   public List<PaginationButtonModel> GetButtons() {
+    bool needLastBtn = true;
+    bool needDelimiterInStart = false;
+    bool needDelimiterInEnd = false;
+    bool existsPrev, existsNext;
+
+    int previousPage, nextPage;
+    int halfInterval = ButtonsCount / 2;
+    int startIndex = CurrentPage - halfInterval;
+    int endIndex = CurrentPage + halfInterval;
+
+    if( TotalPages > ButtonsCount ) {
+      if( startIndex > 2 ) {
+        needDelimiterInStart = true;
+      } else {
+        startIndex = 2;
+        endIndex = startIndex + ButtonsCount - 1;
+      }
+
+      if( endIndex < TotalPages - 1 ) {
+        needDelimiterInEnd = true;
+      } else {
+        startIndex = TotalPages - ButtonsCount + 1;
+        endIndex = TotalPages - 1;
+      }
+    } else {
+      startIndex = 2;
+      endIndex = TotalPages - 1;
+      needLastBtn = (startIndex <= endIndex || TotalPages == 2);
+    }
+
+    if( CurrentPage == 1 ) {
+      existsPrev = false;
+      previousPage = CurrentPage;
+    } else {
+      existsPrev = true;
+      previousPage = CurrentPage - 1;
+    }
+
+    if( CurrentPage >= TotalPages ) {
+      existsNext = false;
+      nextPage = CurrentPage;
+    } else {
+      existsNext = true;
+      nextPage = CurrentPage + 1;
+    }
+
     List<PaginationButtonModel> btns = new();
 
-    var firstAndPrev = PreviousPages();
-    btns.AddRange(firstAndPrev);
+    btns.Add(new(LabelPrevious, previousPage, false, !existsPrev));
+    btns.Add(new("1", 1, CurrentPage == 1));
 
-    var pages = GetNumberPages();
-    btns.AddRange(pages);
+    if( needDelimiterInStart ) {
+      btns.Add(new(LabelDelimiter, -1, false, true));
+    }
 
-    var nextAndLast = NextPages();
-    btns.AddRange(nextAndLast);
+    for( int i = startIndex; i <= endIndex; i++ ) {
+      btns.Add(new(i.ToString(), i, CurrentPage == i));
+    }
+
+    if( needDelimiterInEnd ) {
+      btns.Add(new(LabelDelimiter, -1, false, true));
+    }
+
+    if( needLastBtn ) {
+      btns.Add(new(TotalPages.ToString(), TotalPages, CurrentPage == TotalPages));
+    }
+
+    btns.Add(new(LabelNext, nextPage, false, !existsNext));
 
     return btns;
   }
 
-  private IEnumerable<PaginationButtonModel> PreviousPages() {
-    yield return PageIndex == 0
-        ? new PaginationButtonModel(LabelFirst, 1, isDisabled: true)
-        : new PaginationButtonModel(LabelFirst, 1);
-
-    yield return PreviousPage > 1
-        ? new PaginationButtonModel(LabelPrevious, MinPage - 1)
-        : new PaginationButtonModel(LabelPrevious, MinPage - 1, isDisabled: true);
-  }
-
-  private IEnumerable<PaginationButtonModel> GetNumberPages() {
-    for( var i = MinPage; i <= MaxPage; i++ ) {
-      if( i == PageIndex + 1 ) {
-        yield return new PaginationButtonModel(i.ToString(), i, true);
-        continue;
-      }
-      yield return new PaginationButtonModel(i.ToString(), i);
-    }
-  }
-
-  private IEnumerable<PaginationButtonModel> NextPages() {
-    yield return NextPage >= MaxPage
-        ? new PaginationButtonModel(LabelNext, MaxPage + 1)
-        : new PaginationButtonModel(LabelNext, MaxPage, isDisabled: true);
-
-    yield return PageIndex + 1 == TotalPages
-        ? new PaginationButtonModel(LabelLast, TotalPages, isDisabled: true)
-        : new PaginationButtonModel(LabelLast, TotalPages);
+  public string GetUrl(PaginationButtonModel button) {
+    return button.Value > 1 ? "?page=" + button.Value : "#";
   }
 }

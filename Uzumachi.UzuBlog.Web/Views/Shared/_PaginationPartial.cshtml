@@ -1,6 +1,6 @@
 ﻿@model PaginationModel
 @{
-    if( Model is null || !Model.HasButtons ) {
+    if( Model is null || Model.TotalPages < 2 || !Model.HasButtons ) {
         return;
     }
 }
@@ -8,7 +8,11 @@
     <ul class="pagination">
         @foreach( var button in Model.Buttons ) {
             <li class="page-item @button.IsDisabled.TrueFalse("disabled")@Html.Raw(button.IsActive.TrueFalse("active\" aria-current=\"page"))">
-                <a class="page-link" href="?page=@button.Value">@button.Title</a>
+                @if( button.Value > 0 ) {
+                    <a class="page-link" href="@Model.GetUrl(button)">@button.Title</a>
+                } else {
+                    <span class="page-link">@button.Title</span>
+                }
             </li>
         }
     </ul>
