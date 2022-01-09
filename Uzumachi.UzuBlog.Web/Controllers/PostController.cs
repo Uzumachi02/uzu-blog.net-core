@@ -7,7 +7,7 @@ using Uzumachi.UzuBlog.Web.ViewModels;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
 
-[Route("Posts")]
+[Route("[controller]")]
 public class PostController : Controller {
 
   private readonly IPostService _postService;
@@ -19,7 +19,7 @@ public class PostController : Controller {
   }
 
   // GET: PostController
-  [HttpGet]
+  [HttpGet("/posts")]
   public async Task<IActionResult> ListAsync([FromQuery] PostListRequest req) {
     req.IncludeCategories = req.IncludeUsers = req.IncludeTags = 1;
 
