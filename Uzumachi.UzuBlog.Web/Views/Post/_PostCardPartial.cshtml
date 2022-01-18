@@ -2,12 +2,12 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">
-            <a href="/posts/@Model.Category.Alias/@Model.Alias">@Model.Title</a>
+            <a href="@LinkBuilder.Post.Details(Model.Category.Alias, Model.Alias)">@Html.Raw(Model.Title)</a>
         </h5>
         <p class="text-truncate-2">@Model.Excerpt</p>
 
         <p class="fs-sm">
-            <a class="btn-tag me-2 mb-2" href="/posts/@Model.Category.Alias">@Model.Category.Title</a>
+            <a class="btn-tag me-2 mb-2" href="@LinkBuilder.Post.CategoryList(Model.Category.Alias)">@Model.Category.Title</a>
         </p>
 
         @if( Model.Tags != null ) {

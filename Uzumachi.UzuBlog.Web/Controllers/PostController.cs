@@ -2,6 +2,7 @@
 using Uzumachi.UzuBlog.Core.Interfaces;
 using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Requests;
+using Uzumachi.UzuBlog.Web.Infrastructure;
 using Uzumachi.UzuBlog.Web.Models;
 using Uzumachi.UzuBlog.Web.ViewModels;
 
@@ -34,7 +35,7 @@ public class PostController : Controller {
     return View(vm);
   }
 
-  [HttpGet("{alias}")]
+  [HttpGet("/posts/{alias}")]
   public async Task<IActionResult> CategoryAsync(string alias, [FromQuery] PostListRequest req) {
     var category = await _categoryService.GetByAliasAsync(alias);
 
@@ -57,7 +58,7 @@ public class PostController : Controller {
 
     vm.Title = $"{category.Title} - List of posts";
     vm.Breadcrumb
-      .Add("Posts", "/posts")
+      .Add("Posts", LinkBuilder.Post.List())
       .Add(category.Title);
 
     vm.Pagination = new(req.Page, req.Limit, postsReponse.Count);

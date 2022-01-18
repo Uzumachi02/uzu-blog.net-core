@@ -1,4 +1,5 @@
 ﻿using Uzumachi.UzuBlog.Domain.Dtos;
+using Uzumachi.UzuBlog.Web.Infrastructure;
 
 namespace Uzumachi.UzuBlog.Web.ViewModels;
 
@@ -17,10 +18,10 @@ public class PostViewModel : BaseViewModel {
     Title = postDto.Title;
     H1 = postDto.Title;
 
-    Breadcrumb.Add("Posts", "/posts");
+    Breadcrumb.Add("Posts", LinkBuilder.Post.List());
 
     if( postDto.Category != null ) {
-      Breadcrumb.Add(postDto.Category.Title, "/posts/" + postDto.Category.Alias);
+      Breadcrumb.Add(postDto.Category.Title, LinkBuilder.Post.CategoryList(postDto.Category.Alias));
     }
 
     Breadcrumb.Add(Title);
