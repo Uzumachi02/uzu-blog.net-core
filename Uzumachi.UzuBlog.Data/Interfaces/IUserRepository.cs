@@ -7,6 +7,8 @@ public interface IUserRepository {
 
   Task<UserEntity> GetByIdAsync(int id);
 
+  Task<UserEntity?> GetByUsernameAsync(string username);
+
   Task<IEnumerable<UserEntity>> GetListByIdsAsync(IEnumerable<int> ids);
 
   /// <returns>Id of new item.</returns>

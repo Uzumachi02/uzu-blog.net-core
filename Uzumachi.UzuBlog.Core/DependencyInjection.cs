@@ -9,7 +9,7 @@ public static class DependencyInjection {
   public static IServiceCollection ConfigureCore(this IServiceCollection services) {
 
     // injection services
-    services.AddScoped<IUserServices, UserServices>();
+    services.AddScoped<IUserService, UserService>();
     services.AddScoped<IPostService, PostService>();
     services.AddScoped<IPageService, PageService>();
     services.AddScoped<ISeoService, SeoService>();

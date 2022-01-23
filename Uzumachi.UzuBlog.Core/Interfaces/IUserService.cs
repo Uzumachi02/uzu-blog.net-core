@@ -2,8 +2,7 @@
 
 namespace Uzumachi.UzuBlog.Core.Interfaces;
 
-public interface IUserServices {
+public interface IUserService {
 
-  public Task<UserDto> GetByIdAsync(int id);
+  Task<UserDto?> GetByUsernameAsync(string username);
 }
-

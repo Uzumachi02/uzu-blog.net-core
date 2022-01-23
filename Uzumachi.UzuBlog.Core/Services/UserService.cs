@@ -5,11 +5,11 @@ using Uzumachi.UzuBlog.Domain.Dtos;
 
 namespace Uzumachi.UzuBlog.Core.Services;
 
-public class UserServices : IUserServices {
+public class UserService : IUserService {
 
   private readonly IUnitOfWork _unitOfWork;
 
-  public UserServices(IUnitOfWork unitOfWork) =>
+  public UserService(IUnitOfWork unitOfWork) =>
     _unitOfWork = unitOfWork;
 
   public async Task<UserDto> GetByIdAsync(int id) {
@@ -18,5 +18,10 @@ public class UserServices : IUserServices {
 
     return dbUser.AdaptToUserDto();
   }
-}
 
+  public async Task<UserDto?> GetByUsernameAsync(string username) {
+    var dbUser = await _unitOfWork.Users.GetByUsernameAsync(username);
+
+    return dbUser.AdaptToUserDto();
+  }
+}

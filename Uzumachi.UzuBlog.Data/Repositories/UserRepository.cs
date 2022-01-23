@@ -18,6 +18,14 @@ public class UserRepository : IUserRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<UserEntity>(sql, new { id });
   }
 
+  public async Task<UserEntity?> GetByUsernameAsync(string username) {
+    var sql = $"SELECT * FROM {UserEntity.TABLE} WHERE Lower(username) = @username;";
+
+    return await _dbConnection.QueryFirstOrDefaultAsync<UserEntity>(sql, new {
+      username = username.ToLower()
+    });
+  }
+
   public async Task<IEnumerable<UserEntity>> GetListByIdsAsync(IEnumerable<int> ids) {
     var sql = $"SELECT * FROM {UserEntity.TABLE} WHERE id = ANY(@ids);";
 
