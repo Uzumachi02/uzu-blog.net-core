@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 
-namespace Uzumachi.UzuBlog.Web.Infrastructure;
+namespace Uzumachi.UzuBlog.Web.Infrastructure.Builders;
 
 public static partial class LinkBuilder {
 

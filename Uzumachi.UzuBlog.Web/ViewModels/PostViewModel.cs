@@ -1,5 +1,5 @@
 ﻿using Uzumachi.UzuBlog.Domain.Dtos;
-using Uzumachi.UzuBlog.Web.Infrastructure;
+using Uzumachi.UzuBlog.Web.Infrastructure.Builders;
 
 namespace Uzumachi.UzuBlog.Web.ViewModels;
 
