@@ -14,6 +14,7 @@ public static class DependencyInjection {
     services.AddScoped<IPageService, PageService>();
     services.AddScoped<ISeoService, SeoService>();
     services.AddScoped<ICategoryService, CategoryService>();
+    services.AddScoped<ITagService, TagService>();
 
     return services;
   }

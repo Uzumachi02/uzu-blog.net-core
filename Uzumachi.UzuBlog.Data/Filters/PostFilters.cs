@@ -11,6 +11,8 @@ public class PostFilters : BaseFilters {
 
   public int LanguageId { get; set; }
 
+  public List<int>? TagIds { get; set; }
+
   public override string GetWhereSql(DynamicParameters parameters, bool needAND = false) {
     var wheres = new List<string>();
 
@@ -27,6 +29,11 @@ public class PostFilters : BaseFilters {
     if( LanguageId > 0 ) {
       wheres.Add("base.language_id = @languageId");
       parameters.Add("languageId", LanguageId);
+    }
+
+    if( TagIds != null && TagIds.Count > 0 ) {
+      wheres.Add("base.tag_ids && @tag_ids");
+      parameters.Add("tag_ids", TagIds.ToArray());
     }
 
     return SqlHelpers.WheresToSql(wheres, needAND);

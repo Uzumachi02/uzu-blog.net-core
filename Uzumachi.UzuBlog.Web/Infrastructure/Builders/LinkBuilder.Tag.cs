@@ -2,10 +2,10 @@
 
 public static partial class LinkBuilder {
 
-  public static class User {
+  public static class Tag {
 
-    public static string Details(string username) {
-      return $"/user/{username}";
+    public static string Details(string alias) {
+      return $"/tag/{alias}";
     }
   }
 }

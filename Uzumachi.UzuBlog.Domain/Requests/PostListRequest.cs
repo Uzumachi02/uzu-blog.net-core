@@ -6,6 +6,8 @@ public class PostListRequest : ListRequest {
 
   public int CategoryId { get; set; }
 
+  public List<int>? TagIds { get; set; }
+
   public int LanguageId { get; set; }
 
   public int IncludeUsers { get; set; }

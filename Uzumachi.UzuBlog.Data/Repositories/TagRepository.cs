@@ -18,6 +18,12 @@ public class TagRepository : ITagRepository {
     return await _dbConnection.QueryFirstOrDefaultAsync<TagEntity>(sql, new { id });
   }
 
+  public async Task<TagEntity?> GetByAliasAsync(string alias) {
+    var sql = $"SELECT * FROM {TagEntity.TABLE} WHERE alias = @alias and is_deleted = false;";
+
+    return await _dbConnection.QueryFirstOrDefaultAsync<TagEntity>(sql, new { alias });
+  }
+
   public async Task<IEnumerable<TagEntity>> GetListByIdsAsync(IEnumerable<int> ids) {
     var sql = $"SELECT * FROM {TagEntity.TABLE} WHERE id = ANY(@ids);";
 
