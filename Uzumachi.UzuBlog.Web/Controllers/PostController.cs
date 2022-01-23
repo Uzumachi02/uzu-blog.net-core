@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Uzumachi.UzuBlog.Core.Interfaces;
-using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Requests;
 using Uzumachi.UzuBlog.Web.Infrastructure;
-using Uzumachi.UzuBlog.Web.Models;
+using Uzumachi.UzuBlog.Web.Infrastructure.Builders;
 using Uzumachi.UzuBlog.Web.ViewModels;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
@@ -30,7 +29,7 @@ public class PostController : Controller {
     vm.Title = "List of posts";
     vm.Breadcrumb.Add("Posts");
 
-    vm.Pagination = new(req.Page, req.Limit, postsReponse.Count);
+    vm.Pagination = new PaginationBuilder().BuildByRequest(Request, postsReponse.Count);
 
     return View(vm);
   }
@@ -61,7 +60,7 @@ public class PostController : Controller {
       .Add("Posts", LinkBuilder.Post.List())
       .Add(category.Title);
 
-    vm.Pagination = new(req.Page, req.Limit, postsReponse.Count);
+    vm.Pagination = new PaginationBuilder().BuildByRequest(Request, postsReponse.Count);
 
     return View(vm);
   }
