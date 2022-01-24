@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Uzumachi.UzuBlog.Core.Interfaces;
 using Uzumachi.UzuBlog.Domain.Requests;
-using Uzumachi.UzuBlog.Web.Infrastructure;
+using Uzumachi.UzuBlog.Domain.Responses;
 using Uzumachi.UzuBlog.Web.Infrastructure.Builders;
 using Uzumachi.UzuBlog.Web.ViewModels;
+using Uzumachi.UzuBlog.Web.Infrastructure.Extensions;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
 
@@ -37,9 +38,24 @@ public class PostController : Controller {
   [HttpGet("/posts/categories")]
   public async Task<IActionResult> CategoriesListAsync([FromQuery] CategoryListRequest req) {
     req.IncludePosts = 1;
-    req.PostsLimit = 5;
+    req.PostsLimit = 3;
+    req.Limit = 5;
 
     var categoriesReponse = await _categoryService.GetListAsync(req);
+
+    if( categoriesReponse.Posts != null && categoriesReponse.Posts.Any() ) {
+      var postsReponse = new PostsReponse {
+        Items = categoriesReponse.Posts.ToList(),
+        Count = categoriesReponse.Posts.Count()
+      };
+
+      postsReponse.Categories = await _postService.GetCategoriesFromPosts(categoriesReponse.Posts);
+      postsReponse.Users = await _postService.GetUsersFromPosts(categoriesReponse.Posts);
+      postsReponse.Tags = await _postService.GetTagsFromPosts(categoriesReponse.Posts);
+
+      categoriesReponse.Posts = postsReponse.GroupingItems();
+    }
+
     var vm = PostsCategoriesViewModel.CreateByCategoriesReponse(categoriesReponse);
 
     vm.Title = "List of posts categories";
@@ -47,7 +63,9 @@ public class PostController : Controller {
       .Add("Posts", LinkBuilder.Post.List())
       .Add("Categories");
 
-    vm.Pagination = new PaginationBuilder().BuildByRequest(Request, categoriesReponse.Count);
+    vm.Pagination = new PaginationBuilder()
+      .SetPageSize(req.Limit)
+      .BuildByRequest(Request, categoriesReponse.Count);
 
     return View(vm);
   }

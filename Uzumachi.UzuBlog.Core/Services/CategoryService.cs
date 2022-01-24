@@ -38,7 +38,7 @@ public class CategoryService : ICategoryService {
     var categories = dbCategories.Select(x => x.AdaptToCategoryDto()).ToArray();
 
     if( req.IncludePosts > 0 ) {
-      response.Posts = await GetPostsFromCategories(categories);
+      response.Posts = await GetPostsFromCategories(categories, req.PostsLimit);
     }
 
     response.Items = categories;
