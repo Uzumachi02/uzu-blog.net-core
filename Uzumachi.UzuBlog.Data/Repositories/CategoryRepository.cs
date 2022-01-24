@@ -1,5 +1,6 @@
 using Dapper;
 using System.Data;
+using Uzumachi.UzuBlog.Data.Filters;
 using Uzumachi.UzuBlog.Data.Interfaces;
 using Uzumachi.UzuBlog.Domain.Entities;
 
@@ -28,6 +29,26 @@ public class CategoryRepository : ICategoryRepository {
     var sql = $"SELECT * FROM {CategoryEntity.TABLE} WHERE id = ANY(@ids);";
 
     return await _dbConnection.QueryAsync<CategoryEntity>(sql, new { ids = ids.ToArray() });
+  }
+
+  public async Task<int> GetListCountAsync(CategoryFilters filters) {
+    var sql = $"SELECT COUNT(*) FROM {CategoryEntity.TABLE} AS base WHERE base.is_deleted = false";
+    var parameters = new DynamicParameters();
+
+    sql += filters.GetWhereSql(parameters, true);
+
+    return await _dbConnection.ExecuteScalarAsync<int>(sql, parameters);
+  }
+
+  public async Task<IEnumerable<CategoryEntity>> GetListAsync(CategoryFilters filters) {
+    var sql = $"SELECT * FROM {CategoryEntity.TABLE} AS base WHERE base.is_deleted = false";
+    var parameters = new DynamicParameters();
+
+    sql += filters.GetWhereSql(parameters, true);
+    sql += filters.GetOrderSql();
+    sql += filters.GetLimitSql();
+
+    return await _dbConnection.QueryAsync<CategoryEntity>(sql, parameters);
   }
 
   public async Task<int> CreateAsync(CategoryEntity category, CancellationToken token, IDbTransaction? transaction = null) {

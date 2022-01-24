@@ -45,6 +45,15 @@ public class PostRepository : IPostRepository {
     return await _dbConnection.ExecuteScalarAsync<int>(sql, parameters);
   }
 
+  public async Task<IEnumerable<PostEntity>> GetByCategoriesIdsAsync(IEnumerable<int> categoriesId, int limit = 20) {
+    var sql = "SELECT * FROM get_posts_by_categories_ids(@categoriesId, @limit)";
+
+    return await _dbConnection.QueryAsync<PostEntity>(sql, new {
+      categoriesId = categoriesId.ToArray(),
+      limit
+    });
+  }
+
   public async Task<int> CreateAsync(PostEntity post, CancellationToken token, IDbTransaction? transaction = null) {
     post.CreateDate = post.UpdateDate = post.PublishDate = DateTime.UtcNow;
 

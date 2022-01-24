@@ -33,6 +33,10 @@ public class MappingRegister : ICodeGenerationRegister {
         .ForType<CategoryEntity>()
         .ForType<CategoryDto>();
 
+    config.AdaptFrom(nameof(CategoryListRequest))
+       .ForType<CategoryListRequest>()
+       .ForType<CategoryFilters>();
+
     config.AdaptFrom(nameof(TagEntity))
         .ForType<TagEntity>()
         .ForType<TagDto>();
@@ -48,6 +52,7 @@ public class MappingRegister : ICodeGenerationRegister {
         .ForType<PageDto>()
         .ForType<SeoDto>()
         .ForType<CategoryDto>()
+        .ForType<CategoryFilters>()
         .ForType<TagDto>()
         .ForType<TagFilters>();
   }

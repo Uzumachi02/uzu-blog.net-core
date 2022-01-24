@@ -25,4 +25,9 @@ public class CategoryDto {
   public DateTime CreateDate { get; set; }
 
   public DateTime UpdateDate { get; set; }
+
+
+  public IEnumerable<CategoryDto>? Children;
+
+  public IEnumerable<PostDto>? Posts;
 }

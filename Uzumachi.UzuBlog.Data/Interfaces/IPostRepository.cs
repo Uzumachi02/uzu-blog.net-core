@@ -14,6 +14,8 @@ public interface IPostRepository {
 
   Task<int> GetListCountAsync(PostFilters filters);
 
+  Task<IEnumerable<PostEntity>> GetByCategoriesIdsAsync(IEnumerable<int> categoriesId, int limit = 20);
+
   /// <returns>Id of new item.</returns>
   Task<int> CreateAsync(PostEntity post, CancellationToken token, IDbTransaction? transaction = null);
 

@@ -34,6 +34,24 @@ public class PostController : Controller {
     return View(vm);
   }
 
+  [HttpGet("/posts/categories")]
+  public async Task<IActionResult> CategoriesListAsync([FromQuery] CategoryListRequest req) {
+    req.IncludePosts = 1;
+    req.PostsLimit = 5;
+
+    var categoriesReponse = await _categoryService.GetListAsync(req);
+    var vm = PostsCategoriesViewModel.CreateByCategoriesReponse(categoriesReponse);
+
+    vm.Title = "List of posts categories";
+    vm.Breadcrumb
+      .Add("Posts", LinkBuilder.Post.List())
+      .Add("Categories");
+
+    vm.Pagination = new PaginationBuilder().BuildByRequest(Request, categoriesReponse.Count);
+
+    return View(vm);
+  }
+
   [HttpGet("/posts/{alias}")]
   public async Task<IActionResult> CategoryAsync(string alias, [FromQuery] PostListRequest req) {
     var category = await _categoryService.GetByAliasAsync(alias);

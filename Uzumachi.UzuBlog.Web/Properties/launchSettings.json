@@ -11,7 +11,7 @@
     "Kestrel": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "tags",
+      "launchUrl": "posts/categories",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
