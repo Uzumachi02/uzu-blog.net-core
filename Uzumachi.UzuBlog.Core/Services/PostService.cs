@@ -38,33 +38,15 @@ public class PostService : IPostService {
     var posts = dbPosts.Select(x => x.AdaptToPostDto()).ToArray();
 
     if( req.IncludeUsers > 0 ) {
-      var usersId = posts.Select(p => p.UserId).Distinct();
-      var dbUsers = await _unitOfWork.Users.GetListByIdsAsync(usersId);
-
-      response.Users = dbUsers.Select(u => u.AdaptToUserDto());
+      response.Users = await GetUsersFromPosts(posts);
     }
 
     if( req.IncludeCategories > 0 ) {
-      var categoriesId = posts.Select(p => p.CategoryId).Distinct();
-      var dbCategories = await _unitOfWork.Categories.GetListByIdsAsync(categoriesId);
-
-      response.Categories = dbCategories.Select(c => c.AdaptToCategoryDto());
+      response.Categories = await GetCategoriesFromPosts(posts);
     }
 
     if( req.IncludeTags > 0 ) {
-      HashSet<int> tagsId = new();
-
-      foreach( var post in posts ) {
-        if( post.TagIds != null ) {
-          tagsId.UnionWith(post.TagIds);
-        }
-      }
-
-      if( tagsId.Count > 0 ) {
-        var dbTags = await _unitOfWork.Tags.GetListByIdsAsync(tagsId);
-
-        response.Tags = dbTags.Select(t => t.AdaptToTagDto());
-      }
+      response.Tags = await GetTagsFromPosts(posts);
     }
 
     response.Items = posts;
@@ -76,5 +58,36 @@ public class PostService : IPostService {
 
     return newViewsCount;
   }
-}
 
+  public async Task<IEnumerable<UserDto>?> GetUsersFromPosts(IEnumerable<PostDto> posts) {
+    var usersId = posts.Select(p => p.UserId).Distinct();
+    var dbUsers = await _unitOfWork.Users.GetListByIdsAsync(usersId);
+
+    return dbUsers.Select(u => u.AdaptToUserDto());
+  }
+
+  public async Task<IEnumerable<CategoryDto>?> GetCategoriesFromPosts(IEnumerable<PostDto> posts) {
+    var categoriesId = posts.Select(p => p.CategoryId).Distinct();
+    var dbCategories = await _unitOfWork.Categories.GetListByIdsAsync(categoriesId);
+
+    return dbCategories.Select(c => c.AdaptToCategoryDto());
+  }
+
+  public async Task<IEnumerable<TagDto>?> GetTagsFromPosts(IEnumerable<PostDto> posts) {
+    HashSet<int> tagsId = new();
+
+    foreach( var post in posts ) {
+      if( post.TagIds != null ) {
+        tagsId.UnionWith(post.TagIds);
+      }
+    }
+
+    if( tagsId.Count > 0 ) {
+      var dbTags = await _unitOfWork.Tags.GetListByIdsAsync(tagsId);
+
+      return dbTags.Select(t => t.AdaptToTagDto());
+    }
+
+    return null;
+  }
+}

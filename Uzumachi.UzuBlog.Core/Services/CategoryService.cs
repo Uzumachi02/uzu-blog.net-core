@@ -38,13 +38,17 @@ public class CategoryService : ICategoryService {
     var categories = dbCategories.Select(x => x.AdaptToCategoryDto()).ToArray();
 
     if( req.IncludePosts > 0 ) {
-      var categoriesId = dbCategories.Select(p => p.Id).Distinct();
-      var dbPosts = await _unitOfWork.Posts.GetByCategoriesIdsAsync(categoriesId, req.PostsLimit);
-
-      response.Posts = dbPosts.Select(p => p.AdaptToPostDto());
+      response.Posts = await GetPostsFromCategories(categories);
     }
 
     response.Items = categories;
     return response;
+  }
+
+  public async Task<IEnumerable<PostDto>?> GetPostsFromCategories(IEnumerable<CategoryDto> categories, int postsLimit = 20) {
+    var categoriesId = categories.Select(p => p.Id).Distinct();
+    var dbPosts = await _unitOfWork.Posts.GetByCategoriesIdsAsync(categoriesId, postsLimit);
+
+    return dbPosts.Select(p => p.AdaptToPostDto());
   }
 }

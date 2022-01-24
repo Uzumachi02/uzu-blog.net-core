@@ -11,4 +11,10 @@ public interface IPostService {
   Task<PostsReponse> GetListAsync(PostListRequest req);
 
   Task<int> IncrementViewsCountById(int postId, CancellationToken cancellationToken = default);
+
+  Task<IEnumerable<UserDto>?> GetUsersFromPosts(IEnumerable<PostDto> posts);
+
+  Task<IEnumerable<CategoryDto>?> GetCategoriesFromPosts(IEnumerable<PostDto> posts);
+
+  Task<IEnumerable<TagDto>?> GetTagsFromPosts(IEnumerable<PostDto> posts);
 }

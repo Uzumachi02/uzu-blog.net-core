@@ -9,4 +9,6 @@ public interface ICategoryService {
   Task<CategoryDto?> GetByAliasAsync(string alias);
 
   Task<CategoriesReponse> GetListAsync(CategoryListRequest req);
+
+  Task<IEnumerable<PostDto>?> GetPostsFromCategories(IEnumerable<CategoryDto> categories, int postsLimit = 20);
 }
