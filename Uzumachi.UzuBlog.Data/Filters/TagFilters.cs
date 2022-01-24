@@ -8,9 +8,6 @@ public class TagFilters : BaseFilters {
   public int LanguageId { get; set; }
 
   public TagFilters() {
-    ValidSortings["by-title"] = "base.title DESC";
-    ValidSortings["by-title-asc"] = "base.title";
-
     DefaultSorting = "by-title-asc";
   }
 

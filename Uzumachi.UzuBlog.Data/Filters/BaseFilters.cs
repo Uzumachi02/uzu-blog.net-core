@@ -20,7 +20,9 @@ public abstract class BaseFilters {
 
   protected Dictionary<string, string> ValidSortings = new() {
     { "by-date", "base.create_date DESC" },
-    { "by-date-asc", "base.create_date" }
+    { "by-date-asc", "base.create_date" },
+    { "by-title", "base.title DESC" },
+    { "by-title-asc", "base.title" }
   };
 
 
