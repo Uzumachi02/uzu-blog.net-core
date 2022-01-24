@@ -1,0 +1,16 @@
+﻿@model TagViewModel
+<partial name="_BreadcrumbPartial" model="Model.Breadcrumb" />
+
+@if( Model.Posts != null && Model.Posts.Any() ) {
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach( var item in Model.Posts ) {
+            <div class="col">
+                <partial name="../Post/_PostCardPartial" model="item" />
+            </div>
+        }
+    </div>
+
+    <partial name="_PaginationPartial" model="Model.Pagination" />
+} else {
+    <p>Posts not found</p>
+}

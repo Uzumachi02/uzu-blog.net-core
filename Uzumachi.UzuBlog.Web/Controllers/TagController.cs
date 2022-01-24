@@ -39,13 +39,11 @@ public class TagController : Controller {
     req.TagIds = new() { tag.Id };
 
     var postsReponse = await postService.GetListAsync(req);
-    var vm = PostsViewModel.CreateByPostsReponse(postsReponse);
+    var vm = new TagViewModel(tag);
 
-    vm.Title = "List of posts";
-    vm.Breadcrumb.Add("Posts");
-
+    vm.SetPostsFromPostsReponse(postsReponse);
     vm.Pagination = new PaginationBuilder().BuildByRequest(Request, postsReponse.Count);
 
-    return Ok(vm);
+    return View(vm);
   }
 }
