@@ -15,6 +15,18 @@ public class TagController : Controller {
     _tagService = tagService;
   }
 
+  [HttpGet("/tags")]
+  public async Task<IActionResult> ListAsync([FromQuery] TagListRequest req) {
+    var tagsResponse = await _tagService.GetListAsync(req);
+    var vm = TagsViewModel.CreateByTagsReponse(tagsResponse);
+
+    vm.Pagination = new PaginationBuilder()
+      .SetPageSize(req.Limit)
+      .BuildByRequest(Request, tagsResponse.Count);
+
+    return View(vm);
+  }
+
   [HttpGet("{alias}")]
   public async Task<IActionResult> DetailsAsync(string alias, [FromQuery] PostListRequest req, [FromServices] IPostService postService) {
     var tag = await _tagService.GetByAliasAsync(alias);

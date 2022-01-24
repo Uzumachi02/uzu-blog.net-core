@@ -1,0 +1,13 @@
+﻿@model TagsViewModel
+<partial name="_BreadcrumbPartial" model="Model.Breadcrumb" />
+@if( Model.Tags != null && Model.Tags.Any() ) {
+    <div class="tags-list">
+        @foreach( var item in Model.Tags ) {
+            <a class="badge text-dark" href="@LinkBuilder.Tag.Details(item.Alias)">@item.Title (@item.PostCount)</a>
+        }
+    </div>
+
+    <partial name="_PaginationPartial" model="Model.Pagination" />
+} else {
+    <p>Not items</p>
+}

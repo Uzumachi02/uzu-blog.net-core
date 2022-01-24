@@ -1,5 +1,6 @@
 using Dapper;
 using System.Data;
+using Uzumachi.UzuBlog.Data.Filters;
 using Uzumachi.UzuBlog.Data.Interfaces;
 using Uzumachi.UzuBlog.Domain.Entities;
 
@@ -34,6 +35,26 @@ public class TagRepository : ITagRepository {
     var sql = $"SELECT * FROM {TagEntity.TABLE} WHERE LOWER(title) = ANY(@tagNames);";
 
     return await _dbConnection.QueryAsync<TagEntity>(sql, new { tagNames = tagNames.Select(x => x.Trim().ToLower()).ToArray() });
+  }
+
+  public async Task<int> GetListCountAsync(TagFilters filters) {
+    var sql = $"SELECT COUNT(*) FROM {TagEntity.TABLE} AS base WHERE base.is_deleted = false";
+    var parameters = new DynamicParameters();
+
+    sql += filters.GetWhereSql(parameters, true);
+
+    return await _dbConnection.ExecuteScalarAsync<int>(sql, parameters);
+  }
+
+  public async Task<IEnumerable<TagEntity>> GetListAsync(TagFilters filters) {
+    var sql = $"SELECT * FROM {TagEntity.TABLE} AS base WHERE base.is_deleted = false";
+    var parameters = new DynamicParameters();
+
+    sql += filters.GetWhereSql(parameters, true);
+    sql += filters.GetOrderSql();
+    sql += filters.GetLimitSql();
+
+    return await _dbConnection.QueryAsync<TagEntity>(sql, parameters);
   }
 
   public async Task<int> CreateAsync(TagEntity tag, CancellationToken token, IDbTransaction? transaction = null) {
