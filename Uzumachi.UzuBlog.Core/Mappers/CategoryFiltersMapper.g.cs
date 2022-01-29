@@ -11,6 +11,7 @@ namespace Uzumachi.UzuBlog.Core.Mappers
             {
                 UserId = p1.UserId,
                 LanguageId = p1.LanguageId,
+                ItemTypeId = p1.ItemTypeId,
                 IncludeChildren = p1.IncludeChildren,
                 Limit = p1.Limit,
                 Offset = p1.Offset,
@@ -27,6 +28,7 @@ namespace Uzumachi.UzuBlog.Core.Mappers
             
             result.UserId = p2.UserId;
             result.LanguageId = p2.LanguageId;
+            result.ItemTypeId = p2.ItemTypeId;
             result.IncludeChildren = p2.IncludeChildren;
             result.Limit = p2.Limit;
             result.Offset = p2.Offset;

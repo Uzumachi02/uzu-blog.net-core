@@ -5,6 +5,7 @@ using Uzumachi.UzuBlog.Domain.Responses;
 using Uzumachi.UzuBlog.Web.Infrastructure.Builders;
 using Uzumachi.UzuBlog.Web.ViewModels;
 using Uzumachi.UzuBlog.Web.Infrastructure.Extensions;
+using Uzumachi.UzuBlog.Domain.Types;
 
 namespace Uzumachi.UzuBlog.Web.Controllers;
 
@@ -37,6 +38,7 @@ public class PostController : Controller {
 
   [HttpGet("/posts/categories")]
   public async Task<IActionResult> CategoriesListAsync([FromQuery] CategoryListRequest req) {
+    req.ItemTypeId = ItemTypes.Post;
     req.IncludePosts = 1;
     req.PostsLimit = 3;
     req.Limit = 5;

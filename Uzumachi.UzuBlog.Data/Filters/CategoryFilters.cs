@@ -9,6 +9,8 @@ public class CategoryFilters : BaseFilters {
 
   public int LanguageId { get; set; }
 
+  public int ItemTypeId { get; set; }
+
   public int IncludeChildren { get; set; }
 
   public CategoryFilters() {
@@ -30,6 +32,11 @@ public class CategoryFilters : BaseFilters {
     if( LanguageId > 0 ) {
       wheres.Add("base.language_id = @languageId");
       parameters.Add("languageId", LanguageId);
+    }
+
+    if( ItemTypeId > 0 ) {
+      wheres.Add("base.item_type_id = @itemTypeId");
+      parameters.Add("itemTypeId", ItemTypeId);
     }
 
     return SqlHelpers.WheresToSql(wheres, needAND);
