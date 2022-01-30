@@ -32,21 +32,45 @@ public class CategoryRepository : ICategoryRepository {
   }
 
   public async Task<int> GetListCountAsync(CategoryFilters filters) {
-    var sql = $"SELECT COUNT(*) FROM {CategoryEntity.TABLE} AS base WHERE base.is_deleted = false";
+    string sql;
     var parameters = new DynamicParameters();
 
-    sql += filters.GetWhereSql(parameters, true);
+    if( filters.IncludeChildren > 0 ) {
+      sql = $"SELECT * FROM {CategoryEntity.TABLE} AS base WHERE";
+      sql += filters.GetWhereSql(parameters);
+
+      sql = $"WITH RECURSIVE tree AS (" +
+          $"({sql}) " +
+        $"UNION " +
+          $"SELECT c.* " +
+          $"FROM categories c " +
+          $"JOIN tree t ON t.id = c.parent_id OR t.parent_id = c.id" +
+        $") SELECT COUNT(*) FROM tree;";
+    } else {
+      sql = $"SELECT COUNT(*) FROM {CategoryEntity.TABLE} AS base WHERE";
+      sql += filters.GetWhereSql(parameters);
+    }
 
     return await _dbConnection.ExecuteScalarAsync<int>(sql, parameters);
   }
 
   public async Task<IEnumerable<CategoryEntity>> GetListAsync(CategoryFilters filters) {
-    var sql = $"SELECT * FROM {CategoryEntity.TABLE} AS base WHERE base.is_deleted = false";
+    var sql = $"SELECT * FROM {CategoryEntity.TABLE} AS base WHERE";
     var parameters = new DynamicParameters();
 
-    sql += filters.GetWhereSql(parameters, true);
+    sql += filters.GetWhereSql(parameters);
     sql += filters.GetOrderSql();
     sql += filters.GetLimitSql();
+
+    if( filters.IncludeChildren > 0 ) {
+      sql = $"WITH RECURSIVE tree AS (" +
+          $"({sql}) " +
+        $"UNION " +
+          $"SELECT c.* " +
+          $"FROM categories c " +
+          $"JOIN tree t ON t.id = c.parent_id OR t.parent_id = c.id" +
+        $") SELECT * FROM tree;";
+    }
 
     return await _dbConnection.QueryAsync<CategoryEntity>(sql, parameters);
   }

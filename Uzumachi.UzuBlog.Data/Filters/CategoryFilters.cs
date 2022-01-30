@@ -9,6 +9,10 @@ public class CategoryFilters : BaseFilters {
 
   public int LanguageId { get; set; }
 
+  public string? Search { get; set; }
+
+  public bool IsDeleted { get; set; }
+
   public int ItemTypeId { get; set; }
 
   public int IncludeChildren { get; set; }
@@ -20,8 +24,13 @@ public class CategoryFilters : BaseFilters {
   public override string GetWhereSql(DynamicParameters parameters, bool needAND = false) {
     var wheres = new List<string>();
 
-    if( IncludeChildren == 0 ) {
+    if( string.IsNullOrWhiteSpace(Search) ) {
       wheres.Add("base.parent_id = 0");
+    } else {
+      wheres.Add("LOWER(base.title) LIKE (@search)");
+      parameters.Add("search", new DbString {
+        Value = "%" + Search.ToLower().Trim().Replace(" ", "%") + "%"
+      });
     }
 
     if( UserId > 0 ) {
@@ -38,6 +47,8 @@ public class CategoryFilters : BaseFilters {
       wheres.Add("base.item_type_id = @itemTypeId");
       parameters.Add("itemTypeId", ItemTypeId);
     }
+
+    wheres.Add("base.is_deleted = " + IsDeleted);
 
     return SqlHelpers.WheresToSql(wheres, needAND);
   }

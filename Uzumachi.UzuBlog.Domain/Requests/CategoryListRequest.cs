@@ -8,6 +8,8 @@ public class CategoryListRequest : ListRequest {
 
   public int ItemTypeId { get; set; }
 
+  public string? Search { get; set; }
+
   public int IncludeChildren { get; set; }
 
   public int IncludePosts { get; set; }

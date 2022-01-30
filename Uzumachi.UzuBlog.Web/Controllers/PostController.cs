@@ -40,6 +40,7 @@ public class PostController : Controller {
   public async Task<IActionResult> CategoriesListAsync([FromQuery] CategoryListRequest req) {
     req.ItemTypeId = ItemTypes.Post;
     req.IncludePosts = 1;
+    req.IncludeChildren = 1;
     req.PostsLimit = 3;
     req.Limit = 5;
 
