@@ -6,8 +6,11 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+builder.Logging.AddConfiguration(
+    builder.Configuration.GetSection("Logging"));
+
 builder.Services.AddScoped(sp => new HttpClient {
-  BaseAddress = new Uri("https://localhost:7247/")
+  BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Api"))
 });
 
 await builder.Build().RunAsync();

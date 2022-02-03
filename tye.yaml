@@ -1,0 +1,22 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: uzu-blog
+services:
+- name: web
+  project: Uzumachi.UzuBlog.Web/Uzumachi.UzuBlog.Web.csproj
+  bindings:
+  - port: 7080
+- name: api
+  project: Uzumachi.UzuBlog.Api/Uzumachi.UzuBlog.Api.csproj
+  bindings:
+  - port: 7082
+- name: admin
+  project: Uzumachi.UzuBlog.Admin/Uzumachi.UzuBlog.Admin.csproj
+  bindings:
+  - port: 7081
+  env:
+  - ASPNETCORE_ENVIRONMENT=Tye
