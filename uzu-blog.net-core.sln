@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uzumachi.UzuBlog.Migrations
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uzumachi.UzuBlog.Parsers", "Uzumachi.UzuBlog.Parsers\Uzumachi.UzuBlog.Parsers.csproj", "{5BDAD0AE-8351-4B4F-AC56-5A0536DE9FD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uzumachi.UzuBlog.Api", "Uzumachi.UzuBlog.Api\Uzumachi.UzuBlog.Api.csproj", "{F7A81DA1-008D-4D9C-B509-0C1ACF443530}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uzumachi.UzuBlog.Api", "Uzumachi.UzuBlog.Api\Uzumachi.UzuBlog.Api.csproj", "{F7A81DA1-008D-4D9C-B509-0C1ACF443530}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uzumachi.UzuBlog.Admin", "Uzumachi.UzuBlog.Admin\Uzumachi.UzuBlog.Admin.csproj", "{D97448A5-1D08-4018-9859-A41653474B86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{F7A81DA1-008D-4D9C-B509-0C1ACF443530}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7A81DA1-008D-4D9C-B509-0C1ACF443530}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7A81DA1-008D-4D9C-B509-0C1ACF443530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D97448A5-1D08-4018-9859-A41653474B86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D97448A5-1D08-4018-9859-A41653474B86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D97448A5-1D08-4018-9859-A41653474B86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D97448A5-1D08-4018-9859-A41653474B86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
