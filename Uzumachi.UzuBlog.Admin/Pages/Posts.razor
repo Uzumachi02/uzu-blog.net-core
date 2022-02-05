@@ -1,6 +1,6 @@
 ﻿@page "/posts"
 @using Uzumachi.UzuBlog.Domain.Responses
-@inject HttpClient Http
+@inject IPostService postService
 
 <PageTitle>Posts List</PageTitle>
 <div class="container-fluid p-0">
@@ -56,6 +56,6 @@
     private PostsReponse? postsReponse;
 
     protected override async Task OnInitializedAsync() {
-        postsReponse = await Http.GetFromJsonAsync<PostsReponse>("posts");
+        postsReponse = await postService.GetListAsync(new());
     }
 }
