@@ -1,0 +1,19 @@
+﻿@inject IJSRuntime JS
+
+<nav id="sidebar" class="sidebar js-sidebar">
+    <div class="sidebar-content js-simplebar">
+        <NavLink class="sidebar-brand" href="" Match="NavLinkMatch.All">
+            <span class="sidebar-brand-text">
+                <span class="logo-first">Uzu</span><span class="logo-second">Blog</span>
+            </span>
+        </NavLink>
+
+        <SidebarNav />
+    </div>
+</nav>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+      //await JS.InvokeVoidAsync("initSidebar");
+    }
+}
