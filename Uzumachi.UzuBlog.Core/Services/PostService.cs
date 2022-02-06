@@ -14,6 +14,12 @@ public class PostService : IPostService {
   public PostService(IUnitOfWork unitOfWork) =>
     _unitOfWork = unitOfWork;
 
+  public async Task<PostDto?> GetByIdAsync(int id) {
+    var dbPost = await _unitOfWork.Posts.GetByIdAsync(id);
+
+    return dbPost.AdaptToPostDto();
+  }
+
   public async Task<PostDto?> GetByAliasAsync(string alias) {
     var dbPost = await _unitOfWork.Posts.GetByAliasAsync(alias);
 

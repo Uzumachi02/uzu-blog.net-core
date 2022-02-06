@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Uzumachi.UzuBlog.Core.Interfaces;
+using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Requests;
 using Uzumachi.UzuBlog.Domain.Responses;
 using Uzumachi.UzuBlog.Domain.Types;
@@ -86,6 +87,13 @@ public class PostController : ControllerBase {
     }
 
     post.Category = category;
+
+    return Ok(post);
+  }
+
+  [HttpGet("/posts/getById/{id}")]
+  public async Task<ActionResult<PostDto>> GetByIdAsync(int id) {
+    var post = await _postService.GetByIdAsync(id);
 
     return Ok(post);
   }

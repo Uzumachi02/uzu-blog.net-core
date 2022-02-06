@@ -6,6 +6,8 @@ namespace Uzumachi.UzuBlog.Core.Interfaces;
 
 public interface IPostService {
 
+  Task<PostDto?> GetByIdAsync(int id);
+
   Task<PostDto?> GetByAliasAsync(string alias);
 
   Task<PostsReponse> GetListAsync(PostListRequest req);
