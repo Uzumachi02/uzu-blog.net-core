@@ -1,0 +1,14 @@
+﻿@page "/posts/new"
+@using Uzumachi.UzuBlog.Domain.Dtos
+
+<PageTitle>New Post</PageTitle>
+
+<div class="container-fluid p-0">
+    <h1 class="h3 mb-3">New post</h1>
+
+    <PostForm Post="Post" />
+</div>
+
+@code {
+  PostDto Post = new();
+}

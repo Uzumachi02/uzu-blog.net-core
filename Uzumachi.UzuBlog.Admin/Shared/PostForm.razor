@@ -1,0 +1,120 @@
+﻿@using Uzumachi.UzuBlog.Domain.Dtos
+@using Blazored.TextEditor
+
+@if( Post is null ) {
+    <Loading />
+} else {
+    <EditForm Model="Post" OnValidSubmit="validSubmit">
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="post-title" class="form-label">Title</label>
+                            <InputText id="post-title" @bind-Value="Post.Title" class="form-control" placeholder="Title" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="post-excerpt" class="form-label">Excerpt</label>
+                            <InputTextArea id="post-excerpt" @bind-Value="Post.Excerpt" class="form-control" rows="4" placeholder="Excerpt" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Content</label>
+                            <BlazoredTextEditor @ref="@QuillHtml">
+                                <ToolbarContent>
+                                    <select class="ql-header">
+                                        <option selected=""></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="3"></option>
+                                        <option value="4"></option>
+                                        <option value="5"></option>
+                                    </select>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                    </span>
+                                </ToolbarContent>
+                                <EditorContent>@((MarkupString)Post.Content)</EditorContent>
+                            </BlazoredTextEditor>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="post-alias" class="form-label">Alias</label>
+                            <InputText id="post-alias" @bind-Value="Post.Alias" class="form-control" placeholder="Alias" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Publish</h5>
+                    </div>
+                    <div class="card-body">
+                        @if( Post.Id > 0 ) {
+                            <button type="button" class="btn btn-outline-danger">Remove</button>
+                        }
+                        <button type="submit" class="btn btn-primary float-end">Submit</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Categories</h5>
+                    </div>
+
+                    <div class="card-body">
+                        @if( Categories is null ) {
+                            <Loading />
+                        } else {
+                            <InputSelect @bind-Value="Post.CategoryId" class="form-control">
+                              <option value="">Select category...</option>
+                                @foreach( var category in Categories ) {
+                                  <option value="@category.Id">@category.Title</option>
+                                }
+                            </InputSelect>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public PostDto? Post { get; set; }
+
+    BlazoredTextEditor? QuillHtml;
+
+    List<CategoryDto>? Categories = new() {
+            new() {
+                Id = 1,
+                Title = "Test"
+            },
+            new() {
+                Id = 2,
+                Title = "Test 2"
+            },
+        };
+
+    void validSubmit() {
+
+    }
+}

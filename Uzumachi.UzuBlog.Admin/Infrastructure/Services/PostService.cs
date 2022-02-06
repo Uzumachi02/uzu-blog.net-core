@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Requests;
 using Uzumachi.UzuBlog.Domain.Responses;
 
@@ -10,6 +11,12 @@ public class PostService : IPostService {
 
   public PostService(HttpClient http) {
     _http = http;
+  }
+
+  public async Task<PostDto?> GetByIdAsync(int id) {
+    var post = await _http.GetFromJsonAsync<PostDto>($"posts/getById/{id}");
+
+    return post;
   }
 
   public async Task<PostsReponse> GetListAsync(PostListRequest req) {

@@ -1,0 +1,30 @@
+﻿@page "/posts/edit/{id:int}"
+@using Uzumachi.UzuBlog.Domain.Dtos
+@inject IPostService PostService
+
+<div class="container-fluid p-0">
+    @if( Post is null ) {
+        <Loading />
+    } else {
+        <PageTitle>Post</PageTitle>
+
+        <a href="/posts/new" class="btn btn-primary float-end mt-n1"><i class="fas fa-plus"></i> New post</a>
+
+        <div class="mb-3">
+            <h1 class="h3 mb-3">Edit post</h1>
+        </div>
+
+        <PostForm Post="Post" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    PostDto? Post = null;
+
+    protected override async Task OnParametersSetAsync() {
+        Post = await PostService.GetByIdAsync(Id);
+    }
+}

@@ -1,23 +1,17 @@
 ﻿@page "/posts"
 @using Uzumachi.UzuBlog.Domain.Responses
-@inject IPostService postService
+@inject IPostService PostService
 
 <PageTitle>Posts List</PageTitle>
 <div class="container-fluid p-0">
-    <a href="#" class="btn btn-primary float-end mt-n1"><i class="fas fa-plus"></i> New post</a>
+    <a href="/posts/new" class="btn btn-primary float-end mt-n1"><i class="fas fa-plus"></i> New post</a>
 
     <div class="mb-3">
         <h1 class="h3 mb-3">Posts</h1>
     </div>
 
     @if( postsReponse == null ) {
-        <div class="fallback-spinner">
-            <div class="loading">
-                <div role="status" class="spinner-border text-primary">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        </div>
+        <Loading />
     } else if( postsReponse.Items != null && postsReponse.Items.Any() ) {
         <div class="row">
             <div class="col-12">
@@ -35,9 +29,13 @@
                                 @foreach( var item in postsReponse.Items ) {
                                     <tr>
                                         <td>@item.PublishDate.ToShortDateString()</td>
-                                        <td>@item.Title</td>
+                                        <td>
+                                            <a href="@($"/posts/edit/{item.Id}")">
+                                                @item.Title
+                                            </a>
+                                        </td>
                                         <td class="table-action">
-                                            <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></a>
+                                            <a href="@($"/posts/edit/{item.Id}")"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></a>
                                             <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash align-middle"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></a>
                                         </td>
                                     </tr>
@@ -56,6 +54,6 @@
     private PostsReponse? postsReponse;
 
     protected override async Task OnInitializedAsync() {
-        postsReponse = await postService.GetListAsync(new());
+        postsReponse = await PostService.GetListAsync(new());
     }
 }
