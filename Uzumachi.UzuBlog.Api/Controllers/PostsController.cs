@@ -9,12 +9,12 @@ namespace Uzumachi.UzuBlog.Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PostController : ControllerBase {
+public class PostsController : ControllerBase {
 
   private readonly IPostService _postService;
   private readonly ICategoryService _categoryService;
 
-  public PostController(IPostService postService, ICategoryService categoryService) {
+  public PostsController(IPostService postService, ICategoryService categoryService) {
     _postService = postService;
     _categoryService = categoryService;
   }
@@ -24,30 +24,6 @@ public class PostController : ControllerBase {
     var postsReponse = await _postService.GetListAsync(req);
 
     return Ok(postsReponse);
-  }
-
-  [HttpGet("/posts/categories")]
-  public async Task<IActionResult> CategoriesListAsync([FromQuery] CategoryListRequest req) {
-    req.ItemTypeId = ItemTypes.Post;
-    req.IncludePosts = 1;
-    req.IncludeChildren = 1;
-    req.PostsLimit = 3;
-    req.Limit = 5;
-
-    var categoriesReponse = await _categoryService.GetListAsync(req);
-
-    if( categoriesReponse.Posts != null && categoriesReponse.Posts.Any() ) {
-      var postsReponse = new PostsReponse {
-        Items = categoriesReponse.Posts.ToList(),
-        Count = categoriesReponse.Posts.Count()
-      };
-
-      postsReponse.Categories = await _postService.GetCategoriesFromPosts(categoriesReponse.Posts);
-      postsReponse.Users = await _postService.GetUsersFromPosts(categoriesReponse.Posts);
-      postsReponse.Tags = await _postService.GetTagsFromPosts(categoriesReponse.Posts);
-    }
-
-    return Ok(categoriesReponse);
   }
 
   [HttpGet("/posts/{alias}")]
