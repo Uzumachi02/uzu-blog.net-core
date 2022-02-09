@@ -1,10 +1,11 @@
-﻿@using Uzumachi.UzuBlog.Domain.Dtos
 @using Blazored.TextEditor
+@using Uzumachi.UzuBlog.Domain.Types
+@inject ICategoryService CategoryService
 
 @if( Post is null ) {
     <Loading />
 } else {
-    <EditForm Model="Post" OnValidSubmit="validSubmit">
+    <EditForm Model="Post" OnValidSubmit="OnValidSubmit">
         <div class="row">
             <div class="col-xl-8">
                 <div class="card">
@@ -21,7 +22,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Content</label>
-                            <BlazoredTextEditor @ref="@QuillHtml">
+                            <BlazoredTextEditor @ref="@QuillHtml" DebugLevel="None">
                                 <ToolbarContent>
                                     <select class="ql-header">
                                         <option selected=""></option>
@@ -80,16 +81,7 @@
                     </div>
 
                     <div class="card-body">
-                        @if( Categories is null ) {
-                            <Loading />
-                        } else {
-                            <InputSelect @bind-Value="Post.CategoryId" class="form-control">
-                              <option value="">Select category...</option>
-                                @foreach( var category in Categories ) {
-                                  <option value="@category.Id">@category.Title</option>
-                                }
-                            </InputSelect>
-                        }
+                        <CategorySelector Categories="Categories?.ToList()" @bind-CategoryId="Post.CategoryId" />
                     </div>
                 </div>
             </div>
@@ -101,20 +93,19 @@
     [Parameter]
     public PostDto? Post { get; set; }
 
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
     BlazoredTextEditor? QuillHtml;
 
-    List<CategoryDto>? Categories = new() {
-            new() {
-                Id = 1,
-                Title = "Test"
-            },
-            new() {
-                Id = 2,
-                Title = "Test 2"
-            },
-        };
+    IEnumerable<CategoryDto>? Categories = null;
 
-    void validSubmit() {
+    protected override async Task OnInitializedAsync() {
+        var categoriesReponse = await CategoryService.GetListAsync(new CategoryListRequest {
+          ItemTypeId = ItemTypes.Post,
+          IncludeChildren = 1
+        });
 
+        Categories = categoriesReponse.Items ?? new List<CategoryDto>();
     }
 }

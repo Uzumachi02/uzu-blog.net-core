@@ -1,3 +1,4 @@
+global using Uzumachi.UzuBlog.Admin.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Uzumachi.UzuBlog.Admin;
@@ -16,5 +17,6 @@ builder.Services.AddScoped(sp => new HttpClient {
 
 // dependency injection
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 await builder.Build().RunAsync();

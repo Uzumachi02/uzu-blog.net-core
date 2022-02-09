@@ -1,0 +1,36 @@
+@if( categories is null ) {
+    <Loading />
+} else {
+    <InputSelect Value="@CategoryId"
+             ValueExpression="() => CategoryId"
+             ValueChanged="CategoryIdChanged"
+             class="form-control">
+        @foreach( var category in categories ) {
+          <CategoryOptions Category="category" Level="0" />
+        }
+    </InputSelect>
+}
+@code {
+    private List<CategoryDto>? categories = null;
+
+    [Parameter]
+    public int CategoryId { get; set; }
+
+    [Parameter, EditorRequired]
+    public List<CategoryDto>? Categories { get; set; }
+
+    [Parameter]
+    public EventCallback<int> CategoryIdChanged { get; set; }
+
+    protected override void OnParametersSet() {
+        if( Categories != null && categories is null ) {
+            categories = GetTreeCategories(Categories);
+        }
+    }
+
+    List<CategoryDto> GetTreeCategories(List<CategoryDto> categories) {
+        categories.ForEach(c => c.Children = categories.Where(cc => cc.ParentId == c.Id).ToList());
+
+        return categories.Where(c => c.ParentId == 0).ToList();
+    }
+}

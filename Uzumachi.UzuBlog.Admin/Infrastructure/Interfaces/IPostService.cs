@@ -2,7 +2,7 @@
 using Uzumachi.UzuBlog.Domain.Requests;
 using Uzumachi.UzuBlog.Domain.Responses;
 
-namespace Uzumachi.UzuBlog.Admin.Infrastructure.Services;
+namespace Uzumachi.UzuBlog.Admin.Infrastructure.Interfaces;
 
 public interface IPostService {
 

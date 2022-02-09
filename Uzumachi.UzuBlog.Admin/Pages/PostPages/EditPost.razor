@@ -1,6 +1,7 @@
-﻿@page "/posts/edit/{id:int}"
+@page "/posts/edit/{id:int}"
 @using Uzumachi.UzuBlog.Domain.Dtos
 @inject IPostService PostService
+@inject IJSRuntime JSRuntime
 
 <div class="container-fluid p-0">
     @if( Post is null ) {
@@ -14,7 +15,7 @@
             <h1 class="h3 mb-3">Edit post</h1>
         </div>
 
-        <PostForm Post="Post" />
+        <PostForm Post="Post" OnValidSubmit="SubmitEdit" />
     }
 </div>
 
@@ -26,5 +27,10 @@
 
     protected override async Task OnParametersSetAsync() {
         Post = await PostService.GetByIdAsync(Id);
+    }
+
+    async Task SubmitEdit() {
+        Console.WriteLine("SubmitEdit");
+        await JSRuntime.InvokeVoidAsync("console.log", Post);
     }
 }

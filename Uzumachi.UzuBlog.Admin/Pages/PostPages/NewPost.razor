@@ -6,9 +6,13 @@
 <div class="container-fluid p-0">
     <h1 class="h3 mb-3">New post</h1>
 
-    <PostForm Post="Post" />
+    <PostForm Post="Post" OnValidSubmit="SubmitCreate" />
 </div>
 
 @code {
-  PostDto Post = new();
+    PostDto Post = new();
+
+    void SubmitCreate() {
+        Console.WriteLine("SubmitCreate");
+    }
 }
