@@ -1,10 +1,11 @@
 @page "/posts/edit/{id:int}"
+@using Uzumachi.UzuBlog.Admin.Infrastructure.FormModels
 @using Uzumachi.UzuBlog.Domain.Dtos
 @inject IPostService PostService
 @inject IJSRuntime JSRuntime
 
 <div class="container-fluid p-0">
-    @if( Post is null ) {
+    @if( PostFM is null ) {
         <Loading />
     } else {
         <PageTitle>Post</PageTitle>
@@ -15,7 +16,7 @@
             <h1 class="h3 mb-3">Edit post</h1>
         </div>
 
-        <PostForm Post="Post" OnValidSubmit="SubmitEdit" />
+        <PostForm Post="PostFM" OnValidSubmit="SubmitEdit" />
     }
 </div>
 
@@ -23,14 +24,20 @@
     [Parameter]
     public int Id { get; set; }
 
-    PostDto? Post = null;
+    PostFormModel? PostFM = null;
 
     protected override async Task OnParametersSetAsync() {
-        Post = await PostService.GetByIdAsync(Id);
+        var postDto = await PostService.GetByIdAsync(Id);
+
+        if( postDto is null ) {
+
+        } else {
+            PostFM = postDto.AdaptToPostFormModel();
+        }
     }
 
     async Task SubmitEdit() {
         Console.WriteLine("SubmitEdit");
-        await JSRuntime.InvokeVoidAsync("console.log", Post);
+        await JSRuntime.InvokeVoidAsync("console.log", PostFM);
     }
 }

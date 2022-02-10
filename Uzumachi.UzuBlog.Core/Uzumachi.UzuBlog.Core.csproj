@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -16,20 +16,20 @@
     <ProjectReference Include="..\Uzumachi.UzuBlog.Data\Uzumachi.UzuBlog.Data.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Generated Include="**\*.g.cs" />
-	</ItemGroup>
+  <ItemGroup>
+    <Generated Include="**\*.g.cs" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Mappers\" />
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mappers\" />
+  </ItemGroup>
 
-	<Target Name="CleanGenerated">
-		<Delete Files="@(Generated)" />
-	</Target>
+  <Target Name="CleanGenerated">
+    <Delete Files="@(Generated)" />
+  </Target>
 
-	<Target Name="Mapster" AfterTargets="AfterBuild">
-		<!--<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tool restore" />-->
-		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)$(ProjectName).dll&quot; -o Mappers -n Uzumachi.UzuBlog.Core.Mappers" />
-	</Target>
+  <Target Name="Mapster" AfterTargets="AfterBuild">
+    <!--<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tool restore" />-->
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)$(ProjectName).dll&quot; -o Mappers -n Uzumachi.UzuBlog.Core.Mappers" />
+  </Target>
 </Project>
