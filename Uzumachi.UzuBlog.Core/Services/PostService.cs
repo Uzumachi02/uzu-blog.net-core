@@ -1,7 +1,9 @@
-﻿using Uzumachi.UzuBlog.Core.Interfaces;
+using Uzumachi.UzuBlog.Core.Interfaces;
 using Uzumachi.UzuBlog.Core.Mappers;
 using Uzumachi.UzuBlog.Data.Interfaces;
+using Uzumachi.UzuBlog.Data.Models;
 using Uzumachi.UzuBlog.Domain.Dtos;
+using Uzumachi.UzuBlog.Domain.Entities;
 using Uzumachi.UzuBlog.Domain.Requests;
 using Uzumachi.UzuBlog.Domain.Responses;
 
@@ -14,16 +16,64 @@ public class PostService : IPostService {
   public PostService(IUnitOfWork unitOfWork) =>
     _unitOfWork = unitOfWork;
 
-  public async Task<PostDto?> GetByIdAsync(int id) {
-    var dbPost = await _unitOfWork.Posts.GetByIdAsync(id);
+  public async Task<PostReponse> GetAsync(PostGetRequest req) {
+    bool isEmptyAlias = string.IsNullOrWhiteSpace(req.Alias);
 
-    return dbPost.AdaptToPostDto();
+    if( req.Id == 0 && isEmptyAlias ) {
+      throw new ArgumentException("Id or Alias not specific");
+    }
+
+    PostExtendentEntity? dbPost = null;
+    PostIncludesModel includes = new() {
+      IncludeUser = req.IncludeUser > 0,
+      IncludeCategory = req.IncludeCategory > 0
+    };
+
+    if( req.Id > 0 ) {
+      dbPost = await _unitOfWork.Posts.GetByIdWithIncludesAsync(req.Id, includes);
+    } else if( !isEmptyAlias ) {
+      dbPost = await _unitOfWork.Posts.GetByAliasWithIncludesAsync(req.Alias!, includes);
+    }
+
+    var postReponse = new PostReponse();
+
+    if( dbPost is null ) {
+      return postReponse;
+    }
+
+    postReponse.Item = dbPost.AdaptToPostDto();
+    postReponse.User = dbPost.User.AdaptToUserDto();
+    postReponse.Category = dbPost.Category.AdaptToCategoryDto();
+
+    if( req.IncludeTags > 0 ) {
+      postReponse.Tags = await GetTagsFromPosts(new[] { postReponse.Item });
+    }
+
+    if( req.IncludeComments > 0 ) {
+      //TODO: IncludeComments
+    }
+
+    return postReponse;
   }
 
-  public async Task<PostDto?> GetByAliasAsync(string alias) {
-    var dbPost = await _unitOfWork.Posts.GetByAliasAsync(alias);
+  public Task<PostReponse> GetByIdAsync(int id, PostGetRequest? req = null) {
+    if( req is null ) {
+      req = new();
+    }
 
-    return dbPost.AdaptToPostDto();
+    req.Id = id;
+
+    return GetAsync(req);
+  }
+
+  public Task<PostReponse> GetByAliasAsync(string alias, PostGetRequest? req = null) {
+    if( req is null ) {
+      req = new();
+    }
+
+    req.Alias = alias;
+
+    return GetAsync(req);
   }
 
   public async Task<PostsReponse> GetListAsync(PostListRequest req) {

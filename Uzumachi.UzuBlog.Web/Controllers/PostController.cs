@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Uzumachi.UzuBlog.Core.Interfaces;
 using Uzumachi.UzuBlog.Domain.Requests;
 using Uzumachi.UzuBlog.Domain.Responses;
@@ -113,16 +113,16 @@ public class PostController : Controller {
       return NotFound();
     }
 
-    var post = await _postService.GetByAliasAsync(alias);
+    var postResponse = await _postService.GetByAliasAsync(alias);
 
-    if( post is null ) {
+    if( postResponse.Item is null ) {
       return NotFound();
     }
 
-    post.Category = category;
-    post.ViewCount = await _postService.IncrementViewsCountById(post.Id, cancellationToken);
+    postResponse.Item.Category = category;
+    postResponse.Item.ViewCount = await _postService.IncrementViewsCountById(postResponse.Item.Id, cancellationToken);
 
-    PostViewModel vm = new(post);
+    PostViewModel vm = new(postResponse.Item);
 
     return View(vm);
   }

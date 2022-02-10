@@ -1,4 +1,4 @@
-﻿using Uzumachi.UzuBlog.Domain.Dtos;
+using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Requests;
 using Uzumachi.UzuBlog.Domain.Responses;
 
@@ -6,9 +6,11 @@ namespace Uzumachi.UzuBlog.Core.Interfaces;
 
 public interface IPostService {
 
-  Task<PostDto?> GetByIdAsync(int id);
+  Task<PostReponse> GetAsync(PostGetRequest req);
 
-  Task<PostDto?> GetByAliasAsync(string alias);
+  Task<PostReponse> GetByIdAsync(int id, PostGetRequest? req = null);
+
+  Task<PostReponse> GetByAliasAsync(string alias, PostGetRequest? req = null);
 
   Task<PostsReponse> GetListAsync(PostListRequest req);
 

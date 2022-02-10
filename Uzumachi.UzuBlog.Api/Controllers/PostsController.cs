@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Uzumachi.UzuBlog.Core.Interfaces;
 using Uzumachi.UzuBlog.Domain.Dtos;
 using Uzumachi.UzuBlog.Domain.Requests;
@@ -19,58 +19,37 @@ public class PostsController : ControllerBase {
     _categoryService = categoryService;
   }
 
-  [HttpGet("/posts")]
+  [HttpGet]
   public async Task<IActionResult> ListAsync([FromQuery] PostListRequest req) {
     var postsReponse = await _postService.GetListAsync(req);
 
     return Ok(postsReponse);
   }
 
-  [HttpGet("/posts/{alias}")]
-  public async Task<IActionResult> CategoryAsync(string alias, [FromQuery] PostListRequest req) {
-    var category = await _categoryService.GetByAliasAsync(alias);
 
-    if( category is null ) {
+  [HttpGet("{id:int}")]
+  public async Task<ActionResult<PostDto>> GetByIdAsync(int id, [FromQuery] PostGetRequest req) {
+    req.Id = id;
+
+    var response = await _postService.GetByIdAsync(id, req);
+
+    if( response.Item is null ) {
       return NotFound();
     }
 
-    req.CategoryId = category.Id;
-
-    var postsReponse = await _postService.GetListAsync(req);
-
-    if( postsReponse.Items != null && postsReponse.Items.Any() ) {
-      foreach( var item in postsReponse.Items ) {
-        item.Category = category;
-      }
-    }
-
-    return Ok(postsReponse);
+    return Ok(response);
   }
 
+  [HttpGet("{alias}")]
+  public async Task<ActionResult<PostDto>> GetByAliasAsync(string alias, [FromQuery] PostGetRequest req) {
+    req.Alias = alias;
 
-  [HttpGet("{catAlias}/{alias}")]
-  public async Task<IActionResult> DetailsAsync(string catAlias, string alias) {
-    var category = await _categoryService.GetByAliasAsync(catAlias);
+    var response = await _postService.GetAsync(req);
 
-    if( category is null ) {
+    if( response.Item is null ) {
       return NotFound();
     }
 
-    var post = await _postService.GetByAliasAsync(alias);
-
-    if( post is null ) {
-      return NotFound();
-    }
-
-    post.Category = category;
-
-    return Ok(post);
-  }
-
-  [HttpGet("/posts/getById/{id}")]
-  public async Task<ActionResult<PostDto>> GetByIdAsync(int id) {
-    var post = await _postService.GetByIdAsync(id);
-
-    return Ok(post);
+    return Ok(response);
   }
 }

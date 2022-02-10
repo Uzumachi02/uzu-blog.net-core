@@ -1,4 +1,4 @@
-﻿namespace Uzumachi.UzuBlog.Domain.Entities;
+namespace Uzumachi.UzuBlog.Domain.Entities;
 
 public class PostEntity : IEntity {
 
