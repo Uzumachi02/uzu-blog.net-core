@@ -1,4 +1,4 @@
-﻿namespace Uzumachi.UzuBlog.Core.Extensions;
+namespace Uzumachi.UzuBlog.Domain.Extensions;
 
 public static class BoolExtensions {
 
