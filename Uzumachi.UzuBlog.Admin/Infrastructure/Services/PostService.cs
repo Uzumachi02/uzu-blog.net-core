@@ -26,8 +26,14 @@ public class PostService : IPostService {
     return postReponse;
   }
 
-  public async Task<PostsReponse> GetListAsync(PostListRequest req) {
-    var postsReponse = await _http.GetFromJsonAsync<PostsReponse>("posts")
+  public async Task<PostsReponse> GetListAsync(PostListRequest? req = null) {
+    var url = "posts";
+
+    if( req != null ) {
+      url += QueryStringConverter.Serialize(req);
+    }
+
+    var postsReponse = await _http.GetFromJsonAsync<PostsReponse>(url)
       ?? new();
 
     return postsReponse;

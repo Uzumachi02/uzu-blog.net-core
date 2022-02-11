@@ -1,6 +1,9 @@
-﻿@page "/posts"
+@page "/posts"
+@using Microsoft.Extensions.Primitives
+@using Uzumachi.UzuBlog.Admin.Infrastructure.Helpers
 @using Uzumachi.UzuBlog.Domain.Responses
 @inject IPostService PostService
+@inject NavigationManager NavManager
 
 <PageTitle>Posts List</PageTitle>
 <div class="container-fluid p-0">
@@ -27,7 +30,7 @@
                             </thead>
                             <tbody>
                                 @foreach( var item in postsReponse.Items ) {
-                                    <tr>
+                                    <tr @key="item.Id">
                                         <td>@item.PublishDate.ToShortDateString()</td>
                                         <td>
                                             <a href="@($"/posts/edit/{item.Id}")">
@@ -44,6 +47,12 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <Pagination Count="postsReponse.Count" CurrentPage="currentPage" BaseUrl="/posts" QueryStrings="queryStrings" PageChanged="changePage" ShowPagingSummary="true" aria-label="Page posts navigation" />
+                    </div>
+                </div>
             </div>
         </div>
     } else {
@@ -53,7 +62,40 @@
 @code {
     private PostsReponse? postsReponse;
 
+    private int currentPage = 1;
+
+    private Dictionary<string, StringValues>? queryStrings;
+
+    private async Task changePage(int pageIndex) {
+        Console.WriteLine($"changePage: {pageIndex}");
+        currentPage = pageIndex;
+
+        await LoadPosts();
+    }
+
+    private async Task LoadPosts() {
+        postsReponse = await PostService.GetListAsync(new PostListRequest {
+            Page = currentPage
+        });
+    }
+
     protected override async Task OnInitializedAsync() {
-        postsReponse = await PostService.GetListAsync(new());
+        Console.WriteLine("OnInitializedAsync");
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        queryStrings = QueryHelpers.ParseQuery(uri.Query);
+
+        if( queryStrings.TryGetValue("page", out var rawPage) && int.TryParse(rawPage, out var page) && page > 1 ) {
+            currentPage = page;
+        }
+
+        await LoadPosts();
+    }
+
+    protected override void OnParametersSet() {
+        Console.WriteLine("OnParametersSet");
+    }
+
+    protected override void OnAfterRender(bool firstRender) {
+        Console.WriteLine($"OnAfterRender: {firstRender}");
     }
 }

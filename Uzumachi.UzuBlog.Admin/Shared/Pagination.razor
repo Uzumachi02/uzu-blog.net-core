@@ -1,0 +1,239 @@
+@using Microsoft.Extensions.Primitives
+@using System.Text.RegularExpressions
+@using Uzumachi.UzuBlog.Admin.Infrastructure.Helpers
+@using Uzumachi.UzuBlog.Domain.Extensions
+
+@if( visible ) {
+    <nav @attributes="Attributes">
+        <ul class="pagination">
+            @foreach( var button in GetButtons() ) {
+                <li class="page-item @(button.IsDisabled.TrueFalse("disabled") + button.IsActive.TrueFalse("active"))">
+                    @if( button.Value > 0 ) {
+                        <a class="page-link" href="@GetUrl(button)" @onclick="@(() => GoToPage(button.Value))">@button.Title</a>
+                    } else {
+                        <span class="page-link">@button.Title</span>
+                    }
+                </li>
+            }
+        </ul>
+
+        @if( ShowPagingSummary ) {
+            <label class="pagination-summary">@(string.Format(PagingSummaryFormat, CurrentPage, TotalPages, Count))</label>
+        }
+    </nav>
+}
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? Attributes { get; set; }
+
+    [Parameter]
+    public int PageSize { get; set; } = 20;
+
+    [Parameter]
+    public int ButtonsCount { get; set; } = 5;
+
+    [Parameter]
+    public int Count { get; set; }
+
+    [Parameter]
+    public int CurrentPage { get; set; }
+
+    [Parameter]
+    public string BaseUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool ShowPagingSummary { get; set; }
+
+    [Parameter]
+    public string PagingSummaryFormat { get; set; } = "Page {0} of {1} ({2} items)";
+
+    [Parameter]
+    public Dictionary<string, StringValues>? QueryStrings { get; set; }
+
+    [Parameter]
+    public EventCallback<int> PageChanged { get; set; }
+
+    private const string LabelPrevious = "Previous page";
+    private const string LabelNext = "Next page";
+    private const string LabelDelimiter= "...";
+    private const string KeyPageFormat = "page={0}";
+
+    private bool visible = false;
+
+    private int TotalPages { get; set; }
+
+    private string _urlFormat = string.Empty;
+
+    private List<PaginationButtonModel>? _buttons;
+
+    private List<PaginationButtonModel> GetButtons() {
+        if( _buttons != null ) {
+            return _buttons;
+        }
+
+        Console.WriteLine("Pagination: GetButtons");
+
+        bool needLastBtn = true;
+        bool needDelimiterInStart = false;
+        bool needDelimiterInEnd = false;
+        bool existsPrev, existsNext;
+
+        int previousPage, nextPage;
+        int halfInterval = ButtonsCount / 2;
+        int startIndex = CurrentPage - halfInterval;
+        int endIndex = CurrentPage + halfInterval;
+
+        if( TotalPages > ButtonsCount ) {
+            if( startIndex > 2 ) {
+                needDelimiterInStart = true;
+            } else {
+                startIndex = 2;
+                endIndex = startIndex + ButtonsCount - 1;
+            }
+
+            if( endIndex < TotalPages - 1 ) {
+                needDelimiterInEnd = true;
+            } else {
+                startIndex = TotalPages - ButtonsCount + 1;
+                endIndex = TotalPages - 1;
+            }
+        } else {
+            startIndex = 2;
+            endIndex = TotalPages - 1;
+            needLastBtn = (startIndex <= endIndex || TotalPages == 2);
+        }
+
+        if( CurrentPage == 1 ) {
+            existsPrev = false;
+            previousPage = CurrentPage;
+        } else {
+            existsPrev = true;
+            previousPage = CurrentPage - 1;
+        }
+
+        if( CurrentPage >= TotalPages ) {
+            existsNext = false;
+            nextPage = CurrentPage;
+        } else {
+            existsNext = true;
+            nextPage = CurrentPage + 1;
+        }
+
+        List<PaginationButtonModel> btns = new();
+
+        btns.Add(new(LabelPrevious, previousPage, false, !existsPrev));
+        btns.Add(new("1", 1, CurrentPage == 1));
+
+        if( needDelimiterInStart ) {
+            btns.Add(new(LabelDelimiter, -1, false, true));
+        }
+
+        for( int i = startIndex; i <= endIndex; i++ ) {
+            btns.Add(new(i.ToString(), i, CurrentPage == i));
+        }
+
+        if( needDelimiterInEnd ) {
+            btns.Add(new(LabelDelimiter, -1, false, true));
+        }
+
+        if( needLastBtn ) {
+            btns.Add(new(TotalPages.ToString(), TotalPages, CurrentPage == TotalPages));
+        }
+
+        btns.Add(new(LabelNext, nextPage, false, !existsNext));
+
+        _buttons = btns;
+
+        return btns;
+    }
+
+    private int _currentPage;
+
+    private void InitUrl() {
+        char querySymbol = '?';
+        StringBuilder url = new();
+        Dictionary<string, StringValues>? queries = null;
+
+        if( BaseUrl.Length == 0 ) {
+            url.Append(querySymbol);
+        } else {
+            int queryIndex = BaseUrl.IndexOf(querySymbol);
+
+            if( queryIndex >= 0 ) {
+                var baseUrlQueries = BaseUrl[queryIndex..];
+                BaseUrl = BaseUrl[..queryIndex];
+                queries = QueryHelpers.ParseQuery(baseUrlQueries);
+            }
+
+            url.Append(BaseUrl);
+            url.Append(querySymbol);
+        }
+
+        if( QueryStrings != null ) {
+            if( queries is null ) {
+                queries = new();
+            }
+
+            foreach( var item in QueryStrings ) {
+                queries[item.Key] = item.Value;
+            }
+        }
+
+        url.Append(KeyPageFormat);
+
+        if( queries != null && queries.Any() ) {
+            queries.Remove("page");
+
+            _urlFormat = QueryHelpers.AddQueryString(url.ToString(), queries);
+        } else {
+            _urlFormat = url.ToString();
+        }
+    }
+
+    public async Task GoToPage(int page, bool forceReload = false) {
+        if( CurrentPage != page || forceReload ) {
+            await PageChanged.InvokeAsync(page);
+        }
+    }
+
+    private string GetUrl(PaginationButtonModel button) {
+        if( button.Value < 2 ) {
+            return Regex.Replace(_urlFormat, @"page=\{0\}&?", "").TrimEnd('?');
+        }
+
+        return string.Format(_urlFormat, button.Value);
+    }
+
+    protected override void OnInitialized() {
+        Console.WriteLine("Pagination: OnInitializedAsync");
+        if( Count < 1 ) {
+            return;
+        }
+
+        if( PageSize < 1 )
+            PageSize = 20;
+
+        ButtonsCount = 5;
+        CurrentPage = CurrentPage > 0 ? CurrentPage : 1;
+        TotalPages = (int)Math.Ceiling(Count / (double)PageSize);
+
+        visible = true;
+        _currentPage = CurrentPage;
+
+        InitUrl();
+    }
+
+    protected override void OnParametersSet() {
+        Console.WriteLine($"Pagination: OnParametersSet {CurrentPage} = {_currentPage}");
+
+        if( CurrentPage != _currentPage ) {
+            _currentPage = CurrentPage;
+            _buttons = null;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender) {
+        Console.WriteLine($"Pagination: OnAfterRender: {firstRender}");
+    }
+}
