@@ -27,12 +27,12 @@
     PostFormModel? PostFM = null;
 
     protected override async Task OnParametersSetAsync() {
-        var postDto = await PostService.GetByIdAsync(Id);
+        var postResponse = await PostService.GetByIdAsync(Id);
 
-        if( postDto is null ) {
+        if( postResponse.Item is null ) {
 
         } else {
-            PostFM = postDto.AdaptToPostFormModel();
+            PostFM = postResponse.Item.AdaptToPostFormModel();
         }
     }
 

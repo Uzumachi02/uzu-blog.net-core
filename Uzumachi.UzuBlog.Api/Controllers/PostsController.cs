@@ -26,7 +26,6 @@ public class PostsController : ControllerBase {
     return Ok(postsReponse);
   }
 
-
   [HttpGet("{id:int}")]
   public async Task<ActionResult<PostDto>> GetByIdAsync(int id, [FromQuery] PostGetRequest req) {
     req.Id = id;
