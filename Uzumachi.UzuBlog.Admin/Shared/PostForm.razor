@@ -6,7 +6,9 @@
 @if( Post is null ) {
     <Loading />
 } else {
-    <EditForm Model="Post" OnValidSubmit="OnValidSubmit">
+    <EditForm Model="Post" OnSubmit="OnSubmitHandler">
+      <DataAnnotationsValidator />
+      <ValidationSummary />
         <div class="row">
             <div class="col-xl-8">
                 <div class="card">
@@ -14,6 +16,7 @@
                         <div class="mb-3">
                             <label for="post-title" class="form-label">Title</label>
                             <InputText id="post-title" @bind-Value="Post.Title" class="form-control" placeholder="Title" />
+                            <ValidationMessage class="invalid-feedback" For="() => Post.Title" />
                         </div>
 
                         <div class="mb-3">
@@ -85,6 +88,16 @@
                         <CategorySelector Categories="Categories?.ToList()" @bind-CategoryId="Post.CategoryId" />
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Image</h5>
+                    </div>
+
+                    <div class="card-body">
+                      <InputImage />
+                    </div>
+                </div>
             </div>
         </div>
     </EditForm>
@@ -103,10 +116,15 @@
 
     protected override async Task OnInitializedAsync() {
         var categoriesReponse = await CategoryService.GetListAsync(new CategoryListRequest {
-          ItemTypeId = ItemTypes.Post,
-          IncludeChildren = 1
-        });
+                ItemTypeId = ItemTypes.Post,
+                IncludeChildren = 1
+            });
 
         Categories = categoriesReponse.Items ?? new List<CategoryDto>();
+    }
+
+    private async Task OnSubmitHandler(EditContext context) {
+        Post.Content = await this.QuillHtml.GetHTML();
+        Console.WriteLine(Post.Content);
     }
 }
