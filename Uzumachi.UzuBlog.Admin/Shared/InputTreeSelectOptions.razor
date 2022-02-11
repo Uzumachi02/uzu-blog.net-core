@@ -1,0 +1,19 @@
+@if( Item != null ) {
+    <li class="inputTreeSelect__item">
+        <label class="inputTreeSelect__label">
+            <input type="checkbox" class="form-check-input">
+            <span class="form-check-label">@Item.Title</span>
+        </label>
+        @if( Item.Children != null ) {
+            <ul class="inputTreeSelect__children">
+                @foreach( var child in Item.Children ) {
+                    <InputTreeSelectOptions Item="child" />
+                }
+            </ul>
+        }
+    </li>
+}
+@code {
+    [Parameter, EditorRequired]
+    public TreeSelectItemModel? Item { get; set; }
+}

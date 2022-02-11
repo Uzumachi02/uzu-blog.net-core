@@ -1,5 +1,6 @@
 @using Blazored.TextEditor
 @using Uzumachi.UzuBlog.Admin.Infrastructure.FormModels
+@using Uzumachi.UzuBlog.Admin.Infrastructure.Helpers
 @using Uzumachi.UzuBlog.Domain.Types
 @inject ICategoryService CategoryService
 
@@ -7,8 +8,8 @@
     <Loading />
 } else {
     <EditForm Model="Post" OnSubmit="OnSubmitHandler">
-      <DataAnnotationsValidator />
-      <ValidationSummary />
+        <DataAnnotationsValidator />
+        <ValidationSummary />
         <div class="row">
             <div class="col-xl-8">
                 <div class="card">
@@ -91,11 +92,25 @@
 
                 <div class="card">
                     <div class="card-header">
+                        <h5 class="card-title mb-0">Categories</h5>
+                    </div>
+
+                    <div class="card-body">
+                        @if( TreeSelectItems is null ) {
+                            <Loading />
+                        } else {
+                            <InputTreeSelect Items="TreeSelectItems" />
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
                         <h5 class="card-title mb-0">Image</h5>
                     </div>
 
                     <div class="card-body">
-                      <InputImage />
+                        <InputImage />
                     </div>
                 </div>
             </div>
@@ -114,13 +129,20 @@
 
     IEnumerable<CategoryDto>? Categories = null;
 
+    List<TreeSelectItemModel>? TreeSelectItems = null;
+
     protected override async Task OnInitializedAsync() {
         var categoriesReponse = await CategoryService.GetListAsync(new CategoryListRequest {
                 ItemTypeId = ItemTypes.Post,
                 IncludeChildren = 1
             });
 
-        Categories = categoriesReponse.Items ?? new List<CategoryDto>();
+        if( categoriesReponse.Items is null ) {
+            Categories = new List<CategoryDto>();
+        } else {
+            TreeSelectItems = TreeSelectHelpers.GetTreeSelectItemModelByCategoryDtos(categoriesReponse.Items);
+            Categories = categoriesReponse.Items;
+        }
     }
 
     private async Task OnSubmitHandler(EditContext context) {

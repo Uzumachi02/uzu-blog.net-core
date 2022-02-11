@@ -1,0 +1,11 @@
+<div class="inputTreeSelect form-control">
+    <ul class="inputTreeSelect__list">
+        @foreach( var item in Items ) {
+            <InputTreeSelectOptions Item="item" />
+        }
+    </ul>
+</div>
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<TreeSelectItemModel> Items { get; set; }
+}
