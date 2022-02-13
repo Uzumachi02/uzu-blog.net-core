@@ -3,7 +3,7 @@
 @using Uzumachi.UzuBlog.Domain.Dtos
 
 <PageTitle>New Post</PageTitle>
-
+<Breadcrumbs Model="breadcrumb" />
 <div class="container-fluid p-0">
     <h1 class="h3 mb-3">New post</h1>
 
@@ -13,6 +13,11 @@
 @code {
     PostDto Post = new();
     PostFormModel PostFM = new();
+    BreadcrumbModel breadcrumb =  new();
+
+    protected override void OnInitialized() {
+        breadcrumb.Add("Home", "/").Add("Posts", "/posts").Add("New post");
+    }
 
     void SubmitCreate() {
         Console.WriteLine("SubmitCreate");

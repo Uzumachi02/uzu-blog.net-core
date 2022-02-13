@@ -6,6 +6,7 @@
 @inject NavigationManager NavManager
 
 <PageTitle>Posts List</PageTitle>
+<Breadcrumbs Model="breadcrumb" />
 <div class="container-fluid p-0">
     <a href="/posts/new" class="btn btn-primary float-end mt-n1"><i class="fas fa-plus"></i> New post</a>
 
@@ -66,6 +67,8 @@
 
     private Dictionary<string, StringValues>? queryStrings;
 
+    private BreadcrumbModel breadcrumb =  new();
+
     private async Task changePage(int pageIndex) {
         Console.WriteLine($"changePage: {pageIndex}");
         currentPage = pageIndex;
@@ -75,12 +78,15 @@
 
     private async Task LoadPosts() {
         postsReponse = await PostService.GetListAsync(new PostListRequest {
-            Page = currentPage
-        });
+                Page = currentPage
+            });
     }
 
     protected override async Task OnInitializedAsync() {
         Console.WriteLine("OnInitializedAsync");
+
+        breadcrumb.Add("Home", "/").Add("Posts");
+
         var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
         queryStrings = QueryHelpers.ParseQuery(uri.Query);
 

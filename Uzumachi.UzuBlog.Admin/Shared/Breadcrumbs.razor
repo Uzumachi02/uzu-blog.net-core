@@ -1,0 +1,32 @@
+@if( Model != null && Model.Count > 0 ) {
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            @foreach( var item in Model.Items ) {
+                <li @attributes="getItemAttributes(item)">
+                    @if( item.HasLink ) {
+                        <a href="@item.Link">@item.Title</a>
+                    } else {
+                        <span>@item.Title</span>
+                    }
+                </li>
+            }
+        </ol>
+    </nav>
+}
+@code {
+    [Parameter, EditorRequired]
+    public BreadcrumbModel? Model { get; set; }
+
+    Dictionary<string, object> getItemAttributes(BreadcrumbItemModel item) {
+        var result = new Dictionary<string, object> {
+          { "class", "breadcrumb-item" }
+        };
+
+        if( item.IsActive ) {
+            result["class"] += " active";
+            result.Add("aria-current", "page");
+        }
+
+        return result;
+    }
+}
